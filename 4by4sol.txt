@@ -1,8 +1,0 @@
-ogre
-teal
-inns
-gede
-otig
-gene
-rand
-else
