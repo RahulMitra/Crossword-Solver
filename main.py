@@ -20,14 +20,14 @@ def englishWordsToLength(englishWordsData):
     return lengthToWords
 
 def main():
-    crossword_file = "example_cross.json"
-    #crossword_file = "4by4.json"
+    #crossword_file = "crosswords/04-03-2014.json"
+    crossword_file = "crosswords/4by4.json"
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
     # cw.printFills()
 
-    englishWordsData = parseEnglishWordsFile("solution.txt")
-    #englishWordsData = parseEnglishWordsFile("4by4sol.txt")
+    #englishWordsData = parseEnglishWordsFile("crosswords/04-03-2014_solution.txt")
+    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
 
     domain = englishWordsToLength(englishWordsData) 
 
