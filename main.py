@@ -22,6 +22,7 @@ def englishWordsToLength(englishWordsData):
 def main():
     print "seeing if anna can commit"
     #crossword_file = "crosswords/04-03-2014.json"
+    #Anna sucks
     crossword_file = "crosswords/4by4.json"
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
