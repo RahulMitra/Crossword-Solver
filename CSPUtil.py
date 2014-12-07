@@ -1,5 +1,6 @@
 import json, re
 import copy
+import SolverUtil
 
 # General code for representing a weighted CSP (Constraint Satisfaction Problem).
 # All variables are being referenced by their index instead of their original
@@ -298,8 +299,9 @@ class BacktrackingSearch():
         var = self.get_unassigned_variable(assignment)
 
         # Least constrained value (LCV) is not used in this assignment
-        # so just use the original ordering
-        ordered_values = self.domains[var]
+        # THIS IS WHERE WE MODIFY IT TO ORDER STUFF
+        # ordered_values = self.domains[var]
+        ordered_values = SolverUtil.ordered_values(var, self.domains[var], cluesToWords, lengthToWords, wordFreqs)
 
         # Continue the backtracking recursion using |var| and |ordered_values|.
         if not self.mac:
