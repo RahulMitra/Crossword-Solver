@@ -16,18 +16,17 @@ def englishWordsToLength(englishWordsData):
         else:
             lengthToWords[len(word)] = [word]
 
-
     return lengthToWords
 
 def main():
     #crossword_file = "crosswords/04-03-2014.json"
-    crossword_file = "crosswords/4by4.json"
+    crossword_file = "crosswords/04-03-2014.json"
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
     # cw.printFills()
 
     #englishWordsData = parseEnglishWordsFile("crosswords/04-03-2014_solution.txt")
-    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
+    englishWordsData = parseEnglishWordsFile("words_and_answers.txt")
 
     domain = englishWordsToLength(englishWordsData) 
 
@@ -45,6 +44,7 @@ def main():
     # with a character in a down fill.
     for across_fill in [fill for fill in cw.fills if fill.clue_type == "across"]:
         for key in across_fill.intersections:
+
             down_fill = across_fill.intersections[key][0]
             down_intersecting_index = across_fill.intersections[key][1]
             across_intersecting_index = key

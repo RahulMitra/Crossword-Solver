@@ -1,4 +1,5 @@
 import json, re
+import copy
 
 # General code for representing a weighted CSP (Constraint Satisfaction Problem).
 # All variables are being referenced by their index instead of their original
@@ -220,7 +221,7 @@ class BacktrackingSearch():
             if w == 0: return w
         return w
 
-    def solve(self, csp, mcv = False, lcv = False, mac = False):
+    def solve(self, csp, mcv = True, lcv = True, mac = True):
         """
         Solves the given weighted CSP using heuristics as specified in the
         parameter. Note that unlike a typical unweighted CSP where the search
