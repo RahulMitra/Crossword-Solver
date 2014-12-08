@@ -62,6 +62,11 @@ def analyzeCluesInput(file_lines):
                     answerSet.add(word)
             answerMap[answer] = answerSet
 
+    file = open("past_clues.txt", 'w')
+    for answer in answerMap:
+        file.write(answer)
+        file.write("\n")
+
 
 
 
@@ -108,10 +113,8 @@ def baseline(empty_word_length, clue, cluesToWords, lengthToWords):
 def semanticAnalysis(clue, answer, answerMap):
 
     if answer not in answerMap:
-        print answer, "not in answer map"
         return 0.0
 
-    print answer, "found in answer map"
     wordsInClue = clue.split()
     semanticScore = 0
     for word in wordsInClue:
@@ -166,16 +169,11 @@ def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
         if answerNum not in answerToScore:
             answerToScore[answerNum] = score
 
-
     sortedTuples = sorted(answerToScore.items(), key=operator.itemgetter(1), reverse = True)
     sortedDomains = []
     for myTuple in sortedTuples: 
-        sortedDomains.append(myTuple[1])
+        sortedDomains.append(myTuple[0])
     return sortedDomains
-
-
-
-
 
 
  # Todo: 

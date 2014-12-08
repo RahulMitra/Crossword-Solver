@@ -27,7 +27,7 @@ def main():
     # cw.printFills()
 
     #englishWordsData = parseEnglishWordsFile("crosswords/04-03-2014_solution.txt")
-    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
+    englishWordsData = parseEnglishWordsFile("wordsEn.txt")
     domain = englishWordsToLength(englishWordsData) 
 
     csp = CSPUtil.CSP()
