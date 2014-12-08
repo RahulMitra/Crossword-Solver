@@ -4,7 +4,7 @@ import csv
 import random
 import collections
 import operator 
-
+import string
 
 
  
@@ -28,8 +28,8 @@ def analyzeCluesInput(file_lines):
     for line in file_lines:
         line_info = (line.strip()).split('\t')
         if len(line_info) == 4:
-            clue = line_info[0]
-            answer = line_info[1]
+            clue = line_info[0].lower()
+            answer = line_info[1].lower()
             year = int(line_info[2])
             month = int(line_info[3])
  
@@ -106,6 +106,12 @@ def baseline(empty_word_length, clue, cluesToWords, lengthToWords):
 # semanticAnalyis assumes that answer is in answerMap
 # Note: The higher the score, the better
 def semanticAnalysis(clue, answer, answerMap):
+
+    if answer not in answerMap:
+        print answer, "not in answer map"
+        return 0.0
+
+    print answer, "found in answer map"
     wordsInClue = clue.split()
     semanticScore = 0
     for word in wordsInClue:
@@ -113,7 +119,6 @@ def semanticAnalysis(clue, answer, answerMap):
             semanticScore += 1
     # Normalize
     return float(semanticScore)/len(wordsInClue)
-
     
  # Feature vector = "[freq, semantic analysis num, 
  # Returns the vector
@@ -137,8 +142,10 @@ def generateFeatureVector(clue, answer, wordFreqs, answerMap):
 # Variable ordering portion of backtracking 
 # Given a variable and its domains 
 # Returns a sorted list of domains
-def orderValues(variable, domains, cluesToWords, lengthToWords, wordFreqs, answerMap): 
-    clue = variable.clue ## NOTE, THIS IS NOT IMPLEMENTED YET IN CSP SHIT AND NEEDS TO BE UPDATED
+def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap): 
+    # Remove Punctuation TODO: is this right?
+    clue = clue.translate(string.maketrans("",""), string.punctuation)
+
     answerToScore = {} ## dict mapping answer to value, which is what we will order by
 
     # First, check to see if clue has appeared before. These answers get the highest weight
@@ -157,8 +164,9 @@ def orderValues(variable, domains, cluesToWords, lengthToWords, wordFreqs, answe
             answerToScore[answer] = score
 
 
-    sortedDict = sorted(answerToScore.items(), key=operator.itemgetter(1))
-    return list(sortedDict.keys())
+    sortedDict = sorted(answerToScore.items(), key=operator.itemgetter(1), reverse = True)
+    print "Tits: ,", sortedDict
+    return 0
 
 
 
@@ -179,7 +187,6 @@ def main():
  
     wordsToClues, cluesToWords, wordFreqs, answerMap = analyzeCluesInput(cluesData)
     wordsToLength, lengthToWords = englishWordsToLength(englishWordsData) 
-    print answerMap
 
     # testClue = "Halloween animal sonar"
     # testAnswer = "Bat"

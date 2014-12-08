@@ -308,8 +308,14 @@ class BacktrackingSearch():
         # Least constrained value (LCV) is not used in this assignment
         # THIS IS WHERE WE MODIFY IT TO ORDER STUFF
         # ordered_values = self.domains[var]
-        clue = self.varNames[var][2]
-        ordered_values = SolverUtil.ordered_values(clue, self.domains[var], self.cluesToWords, self.wordFreqs, self.answerMap)
+        clue = self.csp.varNames[var][2]
+
+        print self.domains[var]
+        for val in self.domains[var]:
+            domain_strs = self.csp.valNames[val]
+        print domain_strs
+
+        ordered_values = SolverUtil.orderValues(clue, domain_strs, self.csp.cluesToWords, self.csp.wordFreqs, self.csp.answerMap)
 
         # Continue the backtracking recursion using |var| and |ordered_values|.
         if not self.mac:
@@ -445,8 +451,6 @@ class BacktrackingSearch():
               # it to the queue.
               if domain_changed:
                 queue.append(var2)
-
-
 
 
 
