@@ -301,7 +301,7 @@ class BacktrackingSearch():
         # Least constrained value (LCV) is not used in this assignment
         # THIS IS WHERE WE MODIFY IT TO ORDER STUFF
         # ordered_values = self.domains[var]
-        ordered_values = SolverUtil.ordered_values(var, self.domains[var], cluesToWords, lengthToWords, wordFreqs)
+        ordered_values = SolverUtil.ordered_values(var, self.domains[var], cluesToWords, lengthToWords, wordFreqs, answerMap)
 
         # Continue the backtracking recursion using |var| and |ordered_values|.
         if not self.mac:
