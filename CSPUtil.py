@@ -264,6 +264,15 @@ class BacktrackingSearch():
         # Print summary of solutions.
         self.print_stats()
 
+    def printOptimalAssignment(self):
+        print "\nSOLUTION FOUND:"
+        for key in self.optimalAssignment:
+            clue_index = key[0]
+            clue_type = key[1]
+            info_str = str(clue_index) + " " + str(clue_type) + ": " + self.optimalAssignment[key]
+            print info_str
+        print ""
+
     def backtrack(self, assignment, numAssigned, weight):
         """
         Perform the back-tracking algorithms to find all possible solutions to
@@ -278,11 +287,12 @@ class BacktrackingSearch():
         @param weight: The weight of the current partial assignment.
         """
 
+        info_str = "assigned " + str(numAssigned) + "/" + str(self.csp.numVars) + " variables"
+        print info_str 
+
         self.numOperations += 1
         assert weight > 0
         if numAssigned == self.csp.numVars:
-            info_str = "assigned " + numAssigned + "/" + self.csp.numVars + " variables"
-            print info_str 
             # A satisfiable solution have been found. Update the statistics.
             self.numAssignments += 1
             newAssignment = {}
@@ -301,24 +311,32 @@ class BacktrackingSearch():
                 if self.firstAssignmentNumOperations == 0:
                     self.firstAssignmentNumOperations = self.numOperations
 
-            print self.optimalAssignment
+            # Function I wrote to simplify printing assignments so they are more readable.
+            self.printOptimalAssignment()
             return
 
         # Select the index of the next variable to be assigned.
         var = self.get_unassigned_variable(assignment)
 
         # Least constrained value (LCV) is not used in this assignment
-        # THIS IS WHERE WE MODIFY IT TO ORDER STUFF
-        # ordered_values = self.domains[var]
+
+        # DOMAIN ORDERING CODE:
+        # ----------------------------------------------------------------
+        # previously, was: ordered_values = self.domains[var]
+        
+        # clue name is: (clue index, clue type, clue). We want the
+        # actual clue, so get the third value in the tuple.
         clue = self.csp.varNames[var][2]
 
-        print self.domains[var]
-        domain_strs = []
+        # Generate domain pairs which are (word, index) since the CSP only
+        # keeps track of indexes.
+        domain_pairs = []
         for val in self.domains[var]:
-            domain_strs.append((self.csp.valNames[var][val], val))
-        print domain_strs
+            domain_pairs.append((self.csp.valNames[var][val], val))
 
-        ordered_values = SolverUtil.orderValues(clue, domain_strs, self.csp.cluesToWords, self.csp.wordFreqs, self.csp.answerMap)
+        # ordered_values is the domain indexes re-ordered using the sentiment analysis
+        ordered_values = SolverUtil.orderValues(clue, domain_pairs, self.csp.cluesToWords, \
+            self.csp.wordFreqs, self.csp.answerMap)
 
         # Continue the backtracking recursion using |var| and |ordered_values|.
         if not self.mac:

@@ -20,18 +20,20 @@ def englishWordsToLength(englishWordsData):
     return lengthToWords
 
 def main():
+    print "Reading crossword puzzle JSON data and forming CSP..."
     #crossword_file = "crosswords/04-03-2014.json"
     crossword_file = "crosswords/4by4.json"
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
     # cw.printFills()
 
-    #englishWordsData = parseEnglishWordsFile("crosswords/04-03-2014_solution.txt")
-    englishWordsData = parseEnglishWordsFile("wordsEn.txt")
+    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
+    #englishWordsData = parseEnglishWordsFile("wordsEn.txt")
     domain = englishWordsToLength(englishWordsData) 
 
     csp = CSPUtil.CSP()
 
+    print "Reading clue data and training feature vector..."
     cluesData = SolverUtil.parseCluesFile("nyt-crossword-master/clues.txt")
     csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap = SolverUtil.analyzeCluesInput(cluesData)    
     

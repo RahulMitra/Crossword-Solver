@@ -112,6 +112,9 @@ def baseline(empty_word_length, clue, cluesToWords, lengthToWords):
 # Note: The higher the score, the better
 def semanticAnalysis(clue, answer, answerMap):
 
+    # For now, if the word being considered (answer) has not been a clue
+    # answer in the past 400,000 set of clues, then give it a weight of 0.0,
+    # to discourage selecting it by ordering it last.
     if answer not in answerMap:
         return 0.0
 
@@ -143,10 +146,8 @@ def generateFeatureVector(clue, answer, wordFreqs, answerMap):
 
 
 # Variable ordering portion of backtracking 
-# Given a variable and its domains 
-# Returns a sorted list of domains
-def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap): 
-    # Remove Punctuation TODO: is this right?
+def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
+    # Remove Punctuation
     clue = clue.translate(string.maketrans("",""), string.punctuation)
 
     answerToScore = {} ## dict mapping answer to value, which is what we will order by
@@ -158,8 +159,8 @@ def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
     #         answerToScore[answer] = 10000000000.0 * possibleAnswers[answer]
 
     # Then, go through all words of the approp. length and assign them a score
+    # domain consists of tuples of (word, index) and we need to return a list of sorted indexes
     for myTuple in domains:
-        print myTuple
         # Compute score
         answer = myTuple[0]
         answerNum = myTuple[1]
@@ -174,37 +175,3 @@ def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
     for myTuple in sortedTuples: 
         sortedDomains.append(myTuple[0])
     return sortedDomains
-
-
- # Todo: 
- # - abbrev mentioned with abbrev 
- # - capitalization in word/clue
-
-def main():
- 
-    clues_filename = sys.argv[1]
-    english_words_filename = sys.argv[2]
-    cluesData = parseCluesFile(clues_filename)
-    englishWordsData = parseEnglishWordsFile(english_words_filename)
- 
- 
-    wordsToClues, cluesToWords, wordFreqs, answerMap = analyzeCluesInput(cluesData)
-    wordsToLength, lengthToWords = englishWordsToLength(englishWordsData) 
-
-    # testClue = "Halloween animal sonar"
-    # testAnswer = "Bat"
-
-
-
- 
-    print len(cluesToWords)
-    print len(wordsToLength)
- 
- 
- 
- 
- 
- 
- 
-if __name__=='__main__':
-    main()
