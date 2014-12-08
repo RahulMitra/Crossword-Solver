@@ -2,6 +2,7 @@ import CrosswordUtil
 import CSPUtil
 import SolverUtil
 import numpy as np
+import sys
 
 def parseEnglishWordsFile(filename):
     d = np.loadtxt(filename, dtype=str)
@@ -21,14 +22,15 @@ def englishWordsToLength(englishWordsData):
 
 def main():
     print "Reading crossword puzzle JSON data and forming CSP..."
+
     #crossword_file = "crosswords/04-03-2014.json"
     crossword_file = "crosswords/4by4.json"
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
     # cw.printFills()
 
-    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
-    #englishWordsData = parseEnglishWordsFile("wordsEn.txt")
+    englishWordsData = parseEnglishWordsFile("wordsEn.txt")
+    #englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
     domain = englishWordsToLength(englishWordsData) 
 
     csp = CSPUtil.CSP()
@@ -38,6 +40,7 @@ def main():
     csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap = SolverUtil.analyzeCluesInput(cluesData)    
     
     # Create CSP variable for each fill in the crossword puzzle
+    print "Adding CSP Variables..."
     for fill in cw.fills:
         csp.add_variable((fill.clue_index, fill.clue_type, fill.clue), domain[fill.fill_length])
         info_str = "Added CSP Variable: (" + str(fill.clue_index) + " " + str(fill.clue_type) \
@@ -47,6 +50,7 @@ def main():
     # Loop through across fills and add binary potentials for each of their
     # intersections. Note that every character in an across fill intersects
     # with a character in a down fill.
+    print "Adding CSP Binary Potentials..."
     for across_fill in [fill for fill in cw.fills if fill.clue_type == "across"]:
         for key in across_fill.intersections:
 
@@ -55,13 +59,14 @@ def main():
             across_intersecting_index = key
 
             def potential(across_str, down_str):
+                #sys.stdout.write('.')
                 return across_str[int(across_intersecting_index)] == down_str[int(down_intersecting_index)]
 
             across_fill_var = (across_fill.clue_index, across_fill.clue_type, across_fill.clue)
             down_fill_var = (down_fill.clue_index, down_fill.clue_type, down_clue)
             csp.add_binary_potential(across_fill_var, down_fill_var, potential)
 
-            print "Added CSP Binary Potential between", across_fill_var, "and", down_fill_var, 
+            #print "Added CSP Binary Potential between", across_fill_var, "and", down_fill_var, 
             info_str = "Added CSP Binary Potential:\n\t" \
                         + str(across_fill_var) + " char " + str(across_intersecting_index) \
                         + " intersects " + str(down_fill_var) + " char " + str(down_intersecting_index)

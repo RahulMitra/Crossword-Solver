@@ -1,6 +1,8 @@
 import json, re
 import copy
 import SolverUtil
+import sys
+import time
 
 # General code for representing a weighted CSP (Constraint Satisfaction Problem).
 # All variables are being referenced by their index instead of their original
@@ -129,12 +131,52 @@ class CSP:
                 print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
             raise
 
-        self.update_binary_potential_table(var1, var2,
-            [[float(potential_func(val1, val2)) \
-                for val2 in self.valNames[var2]] for val1 in self.valNames[var1]])
-        self.update_binary_potential_table(var2, var1, \
-            [[float(potential_func(val1, val2)) \
-                for val1 in self.valNames[var1]] for val2 in self.valNames[var2]])
+        print "Generating 2 binary potential tables of dimensions:", len(self.valNames[var1]), "x", len(self.valNames[var1]), \
+                "=", len(self.valNames[var1]) * len(self.valNames[var1]), "potentials"
+        print "Generating binary potential table 1/2..."
+        table1 = []
+        for index, val1 in enumerate(self.valNames[var1]):
+            # sleep for 1/10th of a millisecond so the CPU doesn't get owned
+            # (brings CPU usage down from 100% to 60%)
+            time.sleep(0.01)
+
+            # Print a dot (.) every 100 values so we know it's not infinite
+            # looping
+            #if ((index % 100) == 0):
+            #    print "."
+
+            new_list = []
+            for val2 in self.valNames[var2]:
+                new_list.append(float(potential_func(val1, val2)))
+            table1.append(new_list)
+
+        self.update_binary_potential_table(var1, var2, table1)
+
+        print "Generating binary potential table 1/2..."
+        table2 = []
+        for val2 in self.valNames[var2]:
+            # sleep for 1/10th of a millisecond so the CPU doesn't get owned
+            # (brings CPU usage down from 100% to 60%)
+            time.sleep(0.01)
+            new_list = []
+            for val1 in self.valNames[var1]:
+                new_list.append(float(potential_func(val1, val2)))
+            table2.append(new_list)
+
+        self.update_binary_potential_table(var2, var1, table2)
+
+        # Original code below, as given to us by CS 221 people. I modified and re-factored
+        # the code to look differently so it was more understandable to me.
+        # -------------------------------------------------------------------------
+        #self.update_binary_potential_table(var1, var2,
+        #    [[float(potential_func(val1, val2)) \
+        #        for val2 in self.valNames[var2]] for val1 in self.valNames[var1]])
+        #self.update_binary_potential_table(var2, var1, \
+        #    [[float(potential_func(val1, val2)) \
+        #        for val1 in self.valNames[var1]] for val2 in self.valNames[var2]])
+        # -------------------------------------------------------------------------
+
+
 
     def update_binary_potential_table(self, var1, var2, table):
         """
