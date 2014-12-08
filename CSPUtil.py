@@ -311,8 +311,9 @@ class BacktrackingSearch():
         clue = self.csp.varNames[var][2]
 
         print self.domains[var]
+        domain_strs = []
         for val in self.domains[var]:
-            domain_strs = self.csp.valNames[val]
+            domain_strs.append((self.csp.valNames[var][val], val))
         print domain_strs
 
         ordered_values = SolverUtil.orderValues(clue, domain_strs, self.csp.cluesToWords, self.csp.wordFreqs, self.csp.answerMap)

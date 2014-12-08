@@ -149,24 +149,29 @@ def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
     answerToScore = {} ## dict mapping answer to value, which is what we will order by
 
     # First, check to see if clue has appeared before. These answers get the highest weight
-    if clue in cluesToWords:
-        possibleAnswers = cluesToWords[clue] 
-        for answer in possibleAnswers: 
-            answerToScore[answer] = 10000000000.0 * possibleAnswers[answer]
+    # if clue in cluesToWords:
+    #     possibleAnswers = cluesToWords[clue]
+    #     for answer in possibleAnswers: 
+    #         answerToScore[answer] = 10000000000.0 * possibleAnswers[answer]
 
     # Then, go through all words of the approp. length and assign them a score
-    for answer in domains:
+    for myTuple in domains:
+        print myTuple
         # Compute score
+        answer = myTuple[0]
+        answerNum = myTuple[1]
         features = generateFeatureVector(clue, answer, wordFreqs, answerMap)
         weights = [.3, .7] ## Dummy weights for now, could potentially change it later
         score  = (features[0] * weights[0]) + (features[1] * weights[1])
-        if answer not in answerToScore:
-            answerToScore[answer] = score
+        if answerNum not in answerToScore:
+            answerToScore[answerNum] = score
 
 
-    sortedDict = sorted(answerToScore.items(), key=operator.itemgetter(1), reverse = True)
-    print "Tits: ,", sortedDict
-    return 0
+    sortedTuples = sorted(answerToScore.items(), key=operator.itemgetter(1), reverse = True)
+    sortedDomains = []
+    for myTuple in sortedTuples: 
+        sortedDomains.append(myTuple[1])
+    return sortedDomains
 
 
 
