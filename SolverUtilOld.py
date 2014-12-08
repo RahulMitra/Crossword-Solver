@@ -2,27 +2,26 @@ import sys
 import numpy as np
 import csv
 import random
-import string
-import json
+import collections
+import operator 
 
-  
+
 ''' so far in order to run this file type the following into the command line:
     python solveCrossword.py cluesData.txt englishWords.txt '''
-  
+ 
 def parseCluesFile(filename):
     d = np.loadtxt(filename, delimiter="\r", dtype=str)
     return d
-  
+ 
 def parseEnglishWordsFile(filename):
     d = np.loadtxt(filename, dtype=str)
     return d
-  
-  
-def analyzeCluesInput(file_lines):
+ 
+ def analyzeCluesInput(file_lines):
     wordsToClues = {}
-    cluesToWords = {}
+    cluesToWords = collections.Counter()
     wordFreqs = {}
-    answerToClueWords = {}
+    answerMap = {}
     for line in file_lines:
         line_info = (line.strip()).split('\t')
         if len(line_info) == 4:
@@ -30,44 +29,38 @@ def analyzeCluesInput(file_lines):
             answer = line_info[1]
             year = int(line_info[2])
             month = int(line_info[3])
-  
+ 
             if answer not in wordsToClues:
                 wordsToClues[answer] = [clue]
             else:
                 if clue != wordsToClues[answer]:
                     wordsToClues[answer].append(clue)
-  
+ 
             if clue not in cluesToWords:
                 cluesToWords[clue] = [answer]
             else:
                 if answer != cluesToWords[clue]:
                     cluesToWords[clue].append(answer)
- 
+
             # Word Freq
             if answer in wordFreqs:
                 wordFreqs[answer] += 1
             else:
                 wordFreqs[answer] = 0
+
+            # Answer map
+            if answer not in answerMap: 
+                answerMap[answer] = set([])
+            # To do: eliminate punctuation
+            wordsInClue = clue.split()
+            answerSet = answerMap[answer]
+            for word in wordsInClue: 
+                if word not in answerSet:
+                    answerSet.add(word)
+            answerMap[answer] = answerSet
+
+    return wordsToClues, cluesToWords, wordFreqs, answerMap
  
-            # here we create a dictionary of possible fill answer to the various words that appear in a particular
-            # clue associated with that answer
-            if answer not in answerToClueWords: 
-                answerToClueWords[answer] = set([])
-            # eliminate punctuation
-            clueNoPunctuation = clue.translate(string.maketrans("",""), string.punctuation)
-
-
-            wordsInClue = clueNoPunctuation.split()
-            clueWords = answerToClueWords[answer]
-
-            for word in wordsInClue:
-                clueWords.add(word.lower())
-            answerToClueWords[answer] = clueWords
-
- 
- 
-    return wordsToClues, cluesToWords, wordFreqs, answerToClueWords
-  
 def englishWordsToLength(englishWordsData):
     wordsToLength = {}
     lengthToWords = {}
@@ -77,11 +70,11 @@ def englishWordsToLength(englishWordsData):
             lengthToWords[len(word)].append(word)
         else:
             lengthToWords[len(word)] = [word]
-  
-  
-    return wordsToLength, lengthToWords
-  
-  
+ 
+ 
+    return wordsToLength
+ 
+ 
 ''' this is the baseline algorithm which will take in the length of the empty word, 
     the clue associated with that word, the dictionary of clues to words that we have from 
     our data set and the lengthToWords dictionary that maps various english word lengths
@@ -96,11 +89,11 @@ def baseline(empty_word_length, clue, cluesToWords, lengthToWords):
             if len(word) == empty_word_length:
                 lenPossWords.append(word)
         return random.choice(lenPossWords)
-  
-    return random.choice(lengthToWords[empty_word_length])
-  
-  
  
+    return random.choice(lengthToWords[empty_word_length])
+ 
+ 
+
 # Takes a clue, answer pair and using answerMap, returns a score
 # Note: can only do semantic analysis on answers in the answer map
 # Have to do something somewhere else if answer is not there, as
@@ -114,56 +107,48 @@ def semanticAnalysis(clue, answer, answerMap):
             semanticScore += 1
     # Normalize
     return float(semanticScore)/len(wordsInClue)
- 
-     
+
+    
  # Feature vector = "[freq, semantic analysis num, 
-def generateFeatureVector(clue, answer, lengthToWords, wordFreqs, answerMap):
+ # Returns the vector
+def generateFeatureVector(clue, answer, wordFreqs, answerMap):
     features = []
- 
+
     # FEATURE 1: Frequency of word in other crossword puzzles
     if answer not in wordFreqs:
         freq = 0
     else:
         freq = wordFreqs[answer]
     features.append(freq)
- 
+
     # FEATURE 2: Semantic Analysis
     semantic = semanticAnalysis(clue, answer, answerMap)
     features.append(semantic)
 
     return features
- 
 
 
-  
- # Todo: 
- # - abbrev mentioned with abbrev 
- # - capitalization in word/clue
- 
-def main():
-  
-    clues_filename = sys.argv[1]
-    english_words_filename = sys.argv[2]
-    cluesData = parseCluesFile(clues_filename)
-    englishWordsData = parseEnglishWordsFile(english_words_filename)
-  
-  
-    wordsToClues, cluesToWords, wordFreqs, answerToClueWords = analyzeCluesInput(cluesData)
-    wordsToLength, lengthToWords = englishWordsToLength(englishWordsData) 
-    # print answerToClueWords
- 
-    
-    # now to test things, let's see what list we get of potential word fills
-    # print getPotentialFills = 
-  
-    # print len(cluesToWords)
-    # print len(wordsToLength)
-  
-  
-  
-  
-  
-  
-  
-if __name__=='__main__':
-    main()
+# Variable ordering portion of backtracking 
+# Given a variable and its domains 
+# Returns a sorted dict of the domains 
+def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
+    answerToScore = {} ## dict mapping answer to value, which is what we will order by
+
+    # First, check to see if clue has appeared before. These answers get the highest weight
+    if clue in cluesToWords:
+        possibleAnswers = cluesToWords[clue] 
+        for answer in possibleAnswers: 
+            answerToScore[answer] = 10000000000.0 * possibleAnswers[answer]
+
+    # Then, go through all words of the approp. length and assign them a score
+    for answer in domains:
+        # Compute score
+        features = generateFeatureVector(clue, answer, wordFreqs, answerMap)
+        weights = [.3, .7] ## Dummy weights for now, could potentially change it later
+        score  = (features[0] * weights[0]) + (features[1] * weights[1])
+        if answer not in answerToScore:
+            answerToScore[answer] = score
+
+
+    sortedDict = sorted(answerToScore.items(), key=operator.itemgetter(1))
+    return list(sortedDict.keys())
