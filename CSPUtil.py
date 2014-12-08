@@ -52,6 +52,11 @@ class CSP:
         # Beaware of the difference when implementing your CSP solver.
         self.binaryPotentials = []
 
+        self.wordsToClues = {}
+        self.cluesToWords = {}
+        self.wordFreqs = {} 
+        self.answerMap = {}
+
     def add_variable(self, varName, domain):
         """
         Add a new variable to the CSP.
@@ -293,6 +298,8 @@ class BacktrackingSearch():
                 self.optimalAssignment = newAssignment
                 if self.firstAssignmentNumOperations == 0:
                     self.firstAssignmentNumOperations = self.numOperations
+
+            print self.optimalAssignment
             return
 
         # Select the index of the next variable to be assigned.
@@ -301,7 +308,8 @@ class BacktrackingSearch():
         # Least constrained value (LCV) is not used in this assignment
         # THIS IS WHERE WE MODIFY IT TO ORDER STUFF
         # ordered_values = self.domains[var]
-        ordered_values = SolverUtil.ordered_values(var, self.domains[var], cluesToWords, lengthToWords, wordFreqs)
+        clue = self.varNames[var][2]
+        ordered_values = SolverUtil.ordered_values(clue, self.domains[var], self.cluesToWords, self.wordFreqs, self.answerMap)
 
         # Continue the backtracking recursion using |var| and |ordered_values|.
         if not self.mac:

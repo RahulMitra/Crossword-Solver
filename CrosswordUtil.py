@@ -7,6 +7,7 @@ class Fill:
 	def __init__(self):
 		self.clue_index = 0 	# index of the clue associated with the word fill
 		self.clue_type = "" 	# across or down
+		self.clue = ""			# clue for fill
 		self.fill_length = 0 	# length of fill
 		self.coordinates = []	# list of coordinate pairs
 		self.intersections = {} # dictionary: fill word intersection index => (clue index, clue type, intersection index)
@@ -126,6 +127,7 @@ class Crossword:
 				newFill.clue_index = clue_num
 				newFill.clue_type = "across"
 				newFill.fill_length = num_fill
+				newFill.clue = self.clues[(newFill.clue_index, newFill.clue_type)]
 
 				# get coordinates that this fill resides on
 				for i in range(newFill.fill_length):
@@ -187,6 +189,7 @@ class Crossword:
 				newFill.clue_index = clue_num
 				newFill.clue_type = "down"
 				newFill.fill_length = num_fill
+				newFill.clue = self.clues[(newFill.clue_index, newFill.clue_type)]				
 
 				# get coordinates that this fill resides on
 				for i in range(newFill.fill_length):

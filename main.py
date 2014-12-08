@@ -1,5 +1,6 @@
 import CrosswordUtil
 import CSPUtil
+import SolverUtil
 import numpy as np
 
 def parseEnglishWordsFile(filename):
@@ -26,18 +27,21 @@ def main():
     # cw.printFills()
 
     #englishWordsData = parseEnglishWordsFile("crosswords/04-03-2014_solution.txt")
-    englishWordsData = parseEnglishWordsFile("words_and_answers.txt")
-
+    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
     domain = englishWordsToLength(englishWordsData) 
 
     csp = CSPUtil.CSP()
+
+    cluesData = SolverUtil.parseCluesFile("nyt-crossword-master/clues.txt")
+    csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap = SolverUtil.analyzeCluesInput(cluesData)    
     
     # Create CSP variable for each fill in the crossword puzzle
     for fill in cw.fills:
-        csp.add_variable((fill.clue_index, fill.clue_type), domain[fill.fill_length])
-        info_str = "Added CSP Variable: (" + str(fill.clue_index) + " " + str(fill.clue_type) \
-            + ") with domain length " + str(fill.fill_length)
-        print info_str
+        print fill.clue
+        #csp.add_variable((fill.clue_index, fill.clue_type, fill.clue), domain[fill.fill_length])
+        #info_str = "Added CSP Variable: (" + str(fill.clue_index) + " " + str(fill.clue_type) \
+        #    + ") with domain length " + str(fill.fill_length)
+        #print info_str
 
     # Loop through across fills and add binary potentials for each of their
     # intersections. Note that every character in an across fill intersects
