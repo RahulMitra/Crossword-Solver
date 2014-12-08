@@ -152,7 +152,7 @@ class CSP:
 
         self.update_binary_potential_table(var1, var2, table1)
 
-        print "Generating binary potential table 1/2..."
+        print "Generating binary potential table 2/2..."
         table2 = []
         for val2 in self.valNames[var2]:
             # sleep for 1/10th of a millisecond so the CPU doesn't get owned
