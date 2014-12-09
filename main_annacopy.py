@@ -43,8 +43,11 @@ def decreaseDomain(fill, currDomain, wordsToClues, cluesToWords, wordFreqs, answ
 
     tupleDomains = [(currDomain[i], i) for i in range(len(currDomain))]
     sortedDomains = SolverUtil.orderValues(fill.clue, tupleDomains, cluesToWords, wordFreqs, answerMap)
-    if len(sortedDomains) > 100:
-        return sortedDomains[:100] # return just top 100 hits for the domain
+    sortedWordDomains = [currDomain[i] for i in range(len(sortedDomains))]
+    if len(sortedWordDomains) > 100:
+        return sortedWordDomains[:100] # return just top 100 hits for the domain
+    else:
+        return sortedWordDomains
 
 
 # still need to put in work where in backtrack we stop trying to fill in words and just fill in with random letters
