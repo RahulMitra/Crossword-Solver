@@ -3,6 +3,7 @@ import copy
 import SolverUtil
 import sys
 import time
+from multiprocessing import Process, Manager
 
 # General code for representing a weighted CSP (Constraint Satisfaction Problem).
 # All variables are being referenced by their index instead of their original
@@ -52,7 +53,9 @@ class CSP:
         # will have an index of 0 in A, but an index of 1 in B. Conversely, the
         # first value for A and B may not necessarily represent the same thing.
         # Beaware of the difference when implementing your CSP solver.
-        self.binaryPotentials = []
+        manager = Manager()
+        self.binaryPotentials = manager.list()
+        #self.binaryPotentials = []
 
         self.wordsToClues = {}
         self.cluesToWords = {}
@@ -131,9 +134,9 @@ class CSP:
                 print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
             raise
 
-        print "Generating 2 binary potential tables of dimensions:", len(self.valNames[var1]), "x", len(self.valNames[var1]), \
-                "=", len(self.valNames[var1]) * len(self.valNames[var1]), "potentials"
-        print "Generating binary potential table 1/2..."
+        #print "Generating 2 binary potential tables of dimensions:", len(self.valNames[var1]), "x", len(self.valNames[var1]), \
+        #        "=", len(self.valNames[var1]) * len(self.valNames[var1]), "potentials"
+        #print "Generating binary potential table 1/2..."
         table1 = []
         for index, val1 in enumerate(self.valNames[var1]):
             # sleep for 1/10th of a millisecond so the CPU doesn't get owned
@@ -152,7 +155,7 @@ class CSP:
 
         self.update_binary_potential_table(var1, var2, table1)
 
-        print "Generating binary potential table 2/2..."
+        #print "Generating binary potential table 2/2..."
         table2 = []
         for val2 in self.valNames[var2]:
             # sleep for 1/10th of a millisecond so the CPU doesn't get owned
