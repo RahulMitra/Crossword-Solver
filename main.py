@@ -3,7 +3,7 @@ import CSPUtil
 import SolverUtil
 import numpy as np
 import sys
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 
 def parseEnglishWordsFile(filename):
     d = np.loadtxt(filename, dtype=str)
@@ -21,15 +21,13 @@ def englishWordsToLength(englishWordsData):
 
     return lengthToWords
 
-def generate_binary_potential(csp, across_fill_var, down_fill_var, across_intersecting_index, down_intersecting_index):
+def generate_binary_potential_table(csp, across_fill_var, down_fill_var, across_intersecting_index, \
+                                down_intersecting_index, potentials_tables):
 
-    print "Computing CSP Binary Potential..."
     def potential(across_str, down_str):
-        #sys.stdout.write('.')
         return across_str[int(across_intersecting_index)] == down_str[int(down_intersecting_index)]
 
-    # Use multiple processes for this:
-    csp.add_binary_potential(across_fill_var, down_fill_var, potential)
+    csp.add_binary_potential(across_fill_var, down_fill_var, potential, potentials_tables)
     print "Added CSP Binary Potential between", across_fill_var, "and", down_fill_var, 
     info_str = "Added CSP Binary Potential:\n\t" \
                 + str(across_fill_var) + " char " + str(across_intersecting_index) \
@@ -47,8 +45,8 @@ def main():
 
     #englishWordsData = parseEnglishWordsFile("words_and_answers.txt")
 
-    englishWordsData = parseEnglishWordsFile("wordsEn.txt")
-    #englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
+    #englishWordsData = parseEnglishWordsFile("wordsEn.txt")
+    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
     domain = englishWordsToLength(englishWordsData) 
 
     csp = CSPUtil.CSP()
@@ -68,7 +66,8 @@ def main():
     # Loop through across fills and add binary potentials for each of their
     # intersections. Note that every character in an across fill intersects
     # with a character in a down fill.
-    print "Spawned process to generate CSP Binary Potential..."
+    potentials_tables = Manager().list()
+
     jobs = []
     for across_fill in [fill for fill in cw.fills if fill.clue_type == "across"]:
         for key in across_fill.intersections:
@@ -80,21 +79,32 @@ def main():
             across_fill_var = (across_fill.clue_index, across_fill.clue_type, across_fill.clue)
             down_fill_var = (down_fill.clue_index, down_fill.clue_type, down_clue)
             
-            p = Process(target=generate_binary_potential, \
-                        args=(csp, across_fill_var, down_fill_var, across_intersecting_index, down_intersecting_index))
+            # Make a new process to generate each binary potential table
+            p = Process(target=generate_binary_potential_table, \
+                        args=(csp, across_fill_var, down_fill_var, across_intersecting_index, \
+                            down_intersecting_index, potentials_tables))
             jobs.append(p)
-            p.start()
+
+    num_concurrent_jobs = 5
+    
+    # start all the jobs
+    for job in jobs:
+        job.start()
 
     # Wait for all jobs to be done,
-    # basically wait for all binary potentials to be computed.
+    # we want to wait for all binary potential tables to be computed.
     for job in jobs:
         job.join()
 
+    # Now set all the binary potential tables (do this synchronously, NOT multithreaded...)
+    print "Done generating binary potential tables. Adding CSP Binary Potentials..."
+    for bp in potentials_tables:
+        csp.update_binary_potential_table(bp[0], bp[1], bp[2])        
+
     # Now we solve the CSP
     search = CSPUtil.BacktrackingSearch()
-    print "Solving..."
+    print "Solving CSP..."
     search.solve(csp)
-
 
 if __name__=='__main__':
     main()
