@@ -60,8 +60,8 @@ def main():
 
     #englishWordsData = parseEnglishWordsFile("words_and_answers.txt")
 
-    #englishWordsData = parseEnglishWordsFile("wordsEn.txt")
-    englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
+    englishWordsData = parseEnglishWordsFile("wordsEn.txt")
+    # englishWordsData = parseEnglishWordsFile("crosswords/4by4sol.txt")
     domain = englishWordsToLength(englishWordsData) 
 
     csp = CSPUtil.CSP()
