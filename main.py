@@ -133,7 +133,7 @@ def main():
 
     # create CSP, train data, create variables, and create binary potentials
     csp = CSPUtil.CSP()
-    trainFeatureVector(csp, "nyt-crossword-master/clues.txt")
+    trainFeatureVector(csp, "cluesFormatted.txt")
     createCSPVariables(csp, cw, domain)
 
     # Sets the number of jobs to execute in parallel when computing

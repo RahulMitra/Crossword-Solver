@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 import csv
 import random
 import collections
@@ -12,13 +11,20 @@ import string
     python solveCrossword.py cluesData.txt englishWords.txt '''
  
 def parseCluesFile(filename):
-    d = np.loadtxt(filename, delimiter="\r", dtype=str)
-    return d
+    inputFile = open(filename)
+    lines = inputFile.readlines()
+    return lines
+
+    # d = np.loadtxt(filename, delimiter="\r", dtype=str)
+    # return d
  
 def parseEnglishWordsFile(filename):
-    d = np.loadtxt(filename, dtype=str)
-    return d
+    # d = np.loadtxt(filename, dtype=str)
+    # return d
  
+    inputFile = open(filename)
+    lines = inputFile.readlines()
+    return lines
  
 def analyzeCluesInput(file_lines):
     wordsToClues = {}
