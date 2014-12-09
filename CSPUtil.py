@@ -3,7 +3,7 @@ import copy
 import SolverUtil
 import sys
 import time
-from multiprocessing import Process, Manager
+from multiprocessing import Process, Manager, Lock
 
 # General code for representing a weighted CSP (Constraint Satisfaction Problem).
 # All variables are being referenced by their index instead of their original
@@ -53,9 +53,11 @@ class CSP:
         # will have an index of 0 in A, but an index of 1 in B. Conversely, the
         # first value for A and B may not necessarily represent the same thing.
         # Beaware of the difference when implementing your CSP solver.
-        manager = Manager()
-        self.binaryPotentials = manager.list()
-        #self.binaryPotentials = []
+        
+        # thread-safe list so our multiple processes don't have
+        # any nasty race conditions
+
+        self.binaryPotentials = []
 
         self.wordsToClues = {}
         self.cluesToWords = {}
@@ -73,7 +75,9 @@ class CSP:
         self.varNames.append(varName)
         self.valNames.append(domain)
         self.unaryPotentials.append(None)
+        
         self.binaryPotentials.append(dict())
+
 
     def get_neighbor_vars(self, var):
         """
@@ -111,7 +115,7 @@ class CSP:
         else:
             self.unaryPotentials[var] = potential
 
-    def add_binary_potential(self, varName1, varName2, potential_func):
+    def add_binary_potential(self, varName1, varName2, potential_func, potentials_tables):
         """
         Takes two variable names and a binary potential function
         |potentialFunc|, add to binaryPotentials. If the two variables already
@@ -134,28 +138,19 @@ class CSP:
                 print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
             raise
 
-        #print "Generating 2 binary potential tables of dimensions:", len(self.valNames[var1]), "x", len(self.valNames[var1]), \
-        #        "=", len(self.valNames[var1]) * len(self.valNames[var1]), "potentials"
-        #print "Generating binary potential table 1/2..."
+        print "Process spawned. Generating binary potential tables of dimensions:", len(self.valNames[var1]), "x", len(self.valNames[var1]), \
+                "=", len(self.valNames[var1]) * len(self.valNames[var1]), "potentials..."
+    
         table1 = []
         for index, val1 in enumerate(self.valNames[var1]):
             # sleep for 1/10th of a millisecond so the CPU doesn't get owned
             # (brings CPU usage down from 100% to 60%)
             time.sleep(0.01)
-
-            # Print a dot (.) every 100 values so we know it's not infinite
-            # looping
-            #if ((index % 100) == 0):
-            #    print "."
-
             new_list = []
             for val2 in self.valNames[var2]:
                 new_list.append(float(potential_func(val1, val2)))
             table1.append(new_list)
 
-        self.update_binary_potential_table(var1, var2, table1)
-
-        #print "Generating binary potential table 2/2..."
         table2 = []
         for val2 in self.valNames[var2]:
             # sleep for 1/10th of a millisecond so the CPU doesn't get owned
@@ -166,7 +161,8 @@ class CSP:
                 new_list.append(float(potential_func(val1, val2)))
             table2.append(new_list)
 
-        self.update_binary_potential_table(var2, var1, table2)
+        potentials_tables.append((var1, var2, table1))
+        potentials_tables.append((var2, var1, table2))
 
         # Original code below, as given to us by CS 221 people. I modified and re-factored
         # the code to look differently so it was more understandable to me.
@@ -180,7 +176,6 @@ class CSP:
         # -------------------------------------------------------------------------
 
 
-
     def update_binary_potential_table(self, var1, var2, table):
         """
         Private method you can skip for 0c, might be useful for 1c though.
@@ -191,6 +186,7 @@ class CSP:
         if var2 not in self.binaryPotentials[var1]:
             self.binaryPotentials[var1][var2] = table
         else:
+            print "*********************************************"
             currentTable = self.binaryPotentials[var1][var2]
             assert len(table) == len(currentTable)
             assert len(table[0]) == len(currentTable[0])
