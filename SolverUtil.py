@@ -174,4 +174,11 @@ def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
     sortedDomains = []
     for myTuple in sortedTuples: 
         sortedDomains.append(myTuple[0])
+        print myTuple[0]
     return sortedDomains
+
+
+
+
+
+

@@ -314,7 +314,7 @@ class BacktrackingSearch():
         for key in self.optimalAssignment:
             clue_index = key[0]
             clue_type = key[1]
-            info_str = str(clue_index) + " " + str(clue_type) + ": " + self.optimalAssignment[key]
+            info_str = str(clue_index) + " " + str(clue_type) + ": " + str(self.optimalAssignment[key])
             print info_str
         print ""
 
@@ -380,8 +380,10 @@ class BacktrackingSearch():
             domain_pairs.append((self.csp.valNames[var][val], val))
 
         # ordered_values is the domain indexes re-ordered using the sentiment analysis
-        ordered_values = SolverUtil.orderValues(clue, domain_pairs, self.csp.cluesToWords, \
-            self.csp.wordFreqs, self.csp.answerMap)
+        ''' commented out ordering using SolverUtil.orderValues to do semantic analysis in main '''
+        # ordered_values = SolverUtil.orderValues(clue, domain_pairs, self.csp.cluesToWords, \
+        #     self.csp.wordFreqs, self.csp.answerMap)
+        ordered_values = self.domains[var]
 
         # Continue the backtracking recursion using |var| and |ordered_values|.
         if not self.mac:

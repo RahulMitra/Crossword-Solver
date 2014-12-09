@@ -4,6 +4,7 @@ import SolverUtil
 import numpy as np
 import sys
 from multiprocessing import Process
+import string
 
 def parseEnglishWordsFile(filename):
     d = np.loadtxt(filename, dtype=str)
@@ -36,6 +37,17 @@ def generate_binary_potential(csp, across_fill_var, down_fill_var, across_inters
                 + " intersects " + str(down_fill_var) + " char " + str(down_intersecting_index)
     print info_str
 
+# will decrease the domain size based on the fill object's clue
+def decreaseDomain(fill, currDomain, wordsToClues, cluesToWords, wordFreqs, answerMap):
+    clue = fill.clue.translate(string.maketrans("",""), string.punctuation)
+
+    tupleDomains = [(currDomain[i], i) for i in range(len(currDomain))]
+    sortedDomains = SolverUtil.orderValues(fill.clue, tupleDomains, cluesToWords, wordFreqs, answerMap)
+    if len(sortedDomains) > 100:
+        return sortedDomains[:100] # return just top 100 hits for the domain
+
+
+# still need to put in work where in backtrack we stop trying to fill in words and just fill in with random letters
 def main():
     print "Reading crossword puzzle JSON data and forming CSP..."
 
@@ -60,7 +72,9 @@ def main():
     # Create CSP variable for each fill in the crossword puzzle
     print "Adding CSP Variables..."
     for fill in cw.fills:
-        csp.add_variable((fill.clue_index, fill.clue_type, fill.clue), domain[fill.fill_length])
+        print "domain: ", domain[fill.fill_length]
+        fillDomain = decreaseDomain(fill, domain[fill.fill_length], csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap)
+        csp.add_variable((fill.clue_index, fill.clue_type, fill.clue), fillDomain)
         info_str = "Added CSP Variable: (" + str(fill.clue_index) + " " + str(fill.clue_type) \
             + ") with domain length " + str(fill.fill_length)
         print info_str
