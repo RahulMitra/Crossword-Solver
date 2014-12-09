@@ -72,6 +72,19 @@ def analyzeCluesInput(file_lines):
 
     return wordsToClues, cluesToWords, wordFreqs, answerMap
  
+
+def englishLengthToWords(englishWordsData):
+    wordsToLength = {}
+    lengthToWords = {}
+    for word in englishWordsData:
+        wordsToLength[word] = len(word)
+        if len(word) in lengthToWords:
+            lengthToWords[len(word)].append(word)
+        else:
+            lengthToWords[len(word)] = [word]
+
+    return lengthToWords
+
 def englishWordsToLength(englishWordsData):
     wordsToLength = {}
     lengthToWords = {}
@@ -174,7 +187,7 @@ def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
     sortedDomains = []
     for myTuple in sortedTuples: 
         sortedDomains.append(myTuple[0])
-        print myTuple[0]
+        #print myTuple[0]
     return sortedDomains
 
 
