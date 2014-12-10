@@ -122,14 +122,15 @@ def main():
     #crossword_file = "crosswords/04-03-2014.json"
     crossword_file = "crosswords/4by4.json"
 
-    # english_words_file = "crosswords/4by4sol.txt"
-    english_words_file = "wordsEn.txt"
+    english_words_file = "crosswords/4by4sol.txt"
+    # english_words_file = "wordsEn.txt"
 
     # create crossword puzzle object and load with data from JSON file
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
     englishWordsData = SolverUtil.parseEnglishWordsFile(english_words_file)
     domain = SolverUtil.englishLengthToWords(englishWordsData) 
+    print domain
 
     # create CSP, train data, create variables, and create binary potentials
     csp = CSPUtil.CSP()

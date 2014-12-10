@@ -83,6 +83,7 @@ def englishLengthToWords(englishWordsData):
     wordsToLength = {}
     lengthToWords = {}
     for word in englishWordsData:
+        word = word.strip()
         wordsToLength[word] = len(word)
         if len(word) in lengthToWords:
             lengthToWords[len(word)].append(word)
