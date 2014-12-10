@@ -35,6 +35,7 @@ def analyzeCluesInput(file_lines):
         line_info = (line.strip()).split('\t')
         if len(line_info) == 4:
             clue = line_info[0].lower()
+            clue = clue.translate(string.maketrans("",""), string.punctuation)
             answer = line_info[1].lower()
             year = int(line_info[2])
             month = int(line_info[3])
@@ -60,8 +61,9 @@ def analyzeCluesInput(file_lines):
             # Answer map
             if answer not in answerMap: 
                 answerMap[answer] = set([])
-            clueNoPunctuation = clue.translate(string.maketrans("",""), string.punctuation)
-            wordsInClue = clueNoPunctuation.split()
+            # clueNoPunctuation = clue.translate(string.maketrans("",""), string.punctuation)
+            # wordsInClue = clueNoPunctuation.split()
+            wordsInClue = clue.split()
             answerSet = answerMap[answer]
             for word in wordsInClue: 
                 if word not in answerSet:
@@ -185,7 +187,7 @@ def orderValues(clue, domains, cluesToWords, wordFreqs, answerMap):
         answer = myTuple[0]
         answerNum = myTuple[1]
         features = generateFeatureVector(clue, answer, wordFreqs, answerMap)
-        weights = [.3, .7] ## Dummy weights for now, could potentially change it later
+        weights = [.2, .8] ## Dummy weights for now, could potentially change it later
         score  = (features[0] * weights[0]) + (features[1] * weights[1])
         if answerNum not in answerToScore:
             answerToScore[answerNum] = score

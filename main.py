@@ -17,12 +17,15 @@ def trainFeatureVector(csp, clues_training_data):
 # will decrease the domain size based on the fill object's clue
 def decreaseDomain(fill, currDomain, wordsToClues, cluesToWords, wordFreqs, answerMap):
     clue = fill.clue.translate(string.maketrans("",""), string.punctuation)
+    # print cluesToWords
+    if clue in cluesToWords:
+        return cluesToWords[clue]
 
     tupleDomains = [(currDomain[i], i) for i in range(len(currDomain))]
     sortedDomains = SolverUtil.orderValues(fill.clue, tupleDomains, cluesToWords, wordFreqs, answerMap)
     sortedWordDomains = [currDomain[i] for i in range(len(sortedDomains))]
-    if len(sortedWordDomains) > 500:
-        return sortedWordDomains[:500] # return just top 100 hits for the domain
+    if len(sortedWordDomains) > 10:
+        return sortedWordDomains[:10] # return just top 100 hits for the domain
     else:
         return sortedWordDomains
 
@@ -96,6 +99,11 @@ def createCSPBinaryPotentials(csp, cw, num_concurrent_jobs):
     potentials_tables = Manager().list()
 
     jobs = []
+
+    ''' approach: 
+        note the across intersections and down intersections and 
+    '''
+
     for across_fill in [fill for fill in cw.fills if fill.clue_type == "across"]:
         for key in across_fill.intersections:
 
@@ -119,18 +127,18 @@ def createCSPBinaryPotentials(csp, cw, num_concurrent_jobs):
 def main():
     print "Reading crossword puzzle JSON data and forming CSP..."
 
-    #crossword_file = "crosswords/04-03-2014.json"
-    crossword_file = "crosswords/4by4.json"
+    crossword_file = "crosswords/04-03-2014.json"
+    #crossword_file = "crosswords/4by4.json"
 
-    english_words_file = "crosswords/4by4sol.txt"
-    # english_words_file = "wordsEn.txt"
+    #english_words_file = "crosswords/4by4sol.txt"
+    english_words_file = "wordsEn.txt"
 
     # create crossword puzzle object and load with data from JSON file
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
     englishWordsData = SolverUtil.parseEnglishWordsFile(english_words_file)
     domain = SolverUtil.englishLengthToWords(englishWordsData) 
-    print domain
+    # print domain
 
     # create CSP, train data, create variables, and create binary potentials
     csp = CSPUtil.CSP()

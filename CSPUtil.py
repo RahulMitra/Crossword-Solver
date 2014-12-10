@@ -371,9 +371,9 @@ class BacktrackingSearch():
 
         # Generate domain pairs which are (word, index) since the CSP only
         # keeps track of indexes.
-        domain_pairs = []
-        for val in self.domains[var]:
-            domain_pairs.append((self.csp.valNames[var][val], val))
+        # domain_pairs = []
+        # for val in self.domains[var]:
+        #     domain_pairs.append((self.csp.valNames[var][val], val))
 
         # ordered_values is the domain indexes re-ordered using the sentiment analysis
         ''' commented out ordering using SolverUtil.orderValues to do semantic analysis in main '''
@@ -385,33 +385,40 @@ class BacktrackingSearch():
         if not self.mac:
             # When arc consistency check is not enabled.
             for val in ordered_values:
-                deltaWeight = self.get_delta_weight(assignment, var, val)
-                if deltaWeight > 0:
-                    assignment[var] = val
-                    self.backtrack(assignment, numAssigned + 1, weight * deltaWeight)
-                    assignment[var] = None
+                if val not in assignment:
+                    deltaWeight = self.get_delta_weight(assignment, var, val)
+                    if deltaWeight > 0:
+                        assignment[var] = val
+                        self.backtrack(assignment, numAssigned + 1, weight * deltaWeight)
+                        assignment[var] = None
         else:
             # Arc consistency check is enabled.
             # Problem 1c: skeleton code for AC-3
             # You need to implement arc_consistency_check().
             for val in ordered_values:
-                deltaWeight = self.get_delta_weight(assignment, var, val)
-                if deltaWeight > 0:
-                    assignment[var] = val
+                if val not in assignment:
+
+                    deltaWeight = self.get_delta_weight(assignment, var, val)
+                    if deltaWeight > 0:
+                        assignment[var] = val
                     # create a deep copy of domains as we are going to look
                     # ahead and change domain values
-                    localCopy = copy.deepcopy(self.domains)
+                        localCopy = copy.deepcopy(self.domains)
                     # fix value for the selected variable so that hopefully we
                     # can eliminate values for other variables
-                    self.domains[var] = [val]
+                        self.domains[var] = [val]
 
                     # enforce arc consistency
-                    self.arc_consistency_check(var)
+                        self.arc_consistency_check(var)
 
-                    self.backtrack(assignment, numAssigned + 1, weight * deltaWeight)
+                        self.backtrack(assignment, numAssigned + 1, weight * deltaWeight)
                     # restore the previous domains
-                    self.domains = localCopy
-                    assignment[var] = None
+                        self.domains = localCopy
+                        assignment[var] = None
+
+        for var2, potential in self.csp.binaryPotentials[var].iteritems():
+            self.csp.valNames[var2]
+
 
     def get_unassigned_variable(self, assignment):
         """
