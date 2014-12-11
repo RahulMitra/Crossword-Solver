@@ -5,25 +5,27 @@ import string
 
 def main():
 
-	inputF = open("synonyms_en.txt")
-	lines = inputF.readlines()
+	inputF = open("homophones.txt")
+	outputF = open("homophones_formatted", "w")
 
-	synonyms = []
-	allSynonyms = {}
+	lines = inputF.readlines()
+	outputStr = ''
 
 	for line in lines:
-		lineNoPunct = line.translate(string.maketrans("",""), string.punctuation)
-		line = lineNoPunct.strip()
-		synonymsPresent = line.split()
-		synonyms.append(synonymsPresent)
+		# noPunct = 
+		noPunct = line.replace(",", " ")
+		noPunct = noPunct.replace("\t", "")
+		noPunct = noPunct.replace("array(", "")
+		noPunct = noPunct.translate(string.maketrans("",""), string.punctuation)
+		noPunct = noPunct.strip()
+		print noPunct
+		noPunct = noPunct.strip()
+		outputStr += noPunct + '\n'
 
-	for i in range(len(synonyms)):
-		for j in range(len(synonyms[i])):
-
-			allSynonyms[synonyms[i][j]] = synonyms[i]
 
     		
-	print allSynonyms
+	outputF.write(outputStr)
+	outputF.close()
 
 
 

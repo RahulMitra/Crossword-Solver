@@ -6,6 +6,12 @@ import string
 ''' more info on cryptic crosswords: http://en.wikipedia.org/wiki/Cryptic_crossword ''' 
 ''' importing synonyms: http://stackoverflow.com/questions/2667057/english-dictionary-as-txt-or-xml-file-with-support-of-synonyms '''
 
+
+''' **** IMPORTANT NEEDS FIXIING *** '''
+''' everywhere where self.synonyms is being used, need to first add 'if' statement that the word is in self.synonyms '''
+
+
+
 class SemanticAnalysis:
     def __init__(self):
 
@@ -16,16 +22,17 @@ class SemanticAnalysis:
     	self.crossWordiest = {}
     	self.mostCommonWords = {}
     	self.synonyms = {} # a dictionary mapping each word to its list of synonyms, the list will include the word itself
+    	self.homophones = {} # a dictionary mapping each word to its list of homophones, or words that sound the same
 
     	''' can also create a dict of all indicators to the type of clue that they indicate '''
 
-    	self.reverseIndicatorsDown = ['back', 'reflected', 'turned', 'going up'] 
+    	self.reverseIndicatorsDown = ['back', 'reflected', 'turned', 'going up', 'went up'] 
     	self.reverseIndicatorsAcross = ['west', 'left']
     	self.hiddenClueIndicators = ['in part', 'partially', 'in', 'within', 'hides', 'conceals', 'some', 'held by']
     	self.palindromeIndicators = ['either way', 'going side to side', 'up and down', 'read both ways']
     	self.containerIndicators = ['within', 'in', 'around', 'about', 'contained', 'held', 'inside', 'retain', 'keeps', 'into']
     	self.homophoneIndicators = ['heard', 'sounds like', 'audibly', 'noisily', 'out loud', 'say', 'spoken']
-    	self.initialismIndicators = ['first', 'prime', 'lead', 'head', 'top']
+    	self.initialismIndicators = ['first', 'prime', 'lead', 'head', 'top', 'starts', 'start']
     	self.endalismIndicators = ['last', 'ultimate', 'final']
     	self.oddEvenIndicators = ['odd', 'even', 'regularly', 'every second']
     	self.deletionIndicators = ['heartlessly', 'loses', 'curtailed', 'dropped', 'gives up']
@@ -41,36 +48,44 @@ class SemanticAnalysis:
     def trainSynonyms(self, synonyms_filename):
     	# the file is formatted such that each line contains a set of synonyms
     	# need to map each word on each line to all other words on the line
+    	inputF = open(synonyms_filename)
+    	lines = inputF.readlines()
+    	synonyms = []
+    	allSynonyms = {}
 
-		inputF = open("synonyms_en.txt")
-		lines = inputF.readlines()
+    	for line in lines:
+    		lineNoPunct = line.translate(string.maketrans("",""), string.punctuation) # ignore all punctuation
+    		line = lineNoPunct.strip()
+    		line = line.lower() # ignore all capitalization
+    		synonymsPresent = line.split()
+    		synonyms.append(synonymsPresent)
 
-		synonyms = []
-		allSynonyms = {}
+    	for i in range(len(synonyms)):
+    		for j in range(len(synonyms[i])):
+    			allSynonyms[synonyms[i][j]] = synonyms[i]
 
-		for line in lines:
-			lineNoPunct = line.translate(string.maketrans("",""), string.punctuation) # ignore all punctuation
-			line = lineNoPunct.strip()
-			line = line.lower() # ignore all capitalization
-			synonymsPresent = line.split()
-			synonyms.append(synonymsPresent)
-
-		for i in range(len(synonyms)):
-			for j in range(len(synonyms[i])):
-
-				allSynonyms[synonyms[i][j]] = synonyms[i]
-
-		self.synonyms = allSynonyms
+    	self.synonyms = allSynonyms
 
 
+    def trainHomophones(self, homophones_filename):
+    	inputF = open(homophones_filename)
+    	lines = inputF.readlines()
+    	homophones = []
+    	allHomophones = {}
 
+    	for line in lines:
+    		homophonesPresent = line.split()
+    		homophones.append(homophonesPresent)
+
+    	for i in range(len(homophones)):
+    		for j in range(len(homophones[i])):
+    			allHomophones[homophones[i][j]] = homophones[i]
+
+    	self.homophones = allHomophones
 
     def trainCluesData(self, clues_filename):
     	cluesData = SolverUtil.parseCluesFile(clues_filename)
     	self.wordsToClues, self.cluesToWords, self.wordFreqs, self.answerMap = SolverUtil.analyzeCluesInput(cluesData) 
-
-    	for clue in self.cluesToWords:
-    		print self.cluesToWords[clue]
 
     def trainCrosswordsWords(self, filename, typeWords):
     	inputF = open(filename)
@@ -86,11 +101,6 @@ class SemanticAnalysis:
     			lineElems = line.split()
     			self.mostCommonWords[lineElems[0].lower()] = int(lineElems[1].strip())
 
-
-
-
-    	print self.mostCommonWords
-    	print self.crossWordiest
 
 
     ''' to define if there is time '''
@@ -129,12 +139,12 @@ class SemanticAnalysis:
 
 
     ''' this one is tough as it combines several clue types '''
-	# An unusual type of word-play where the whole clue is both the definition and the word-play. 
-	# “& lit.” clues are normally indicated by an exclamation mark.  
+    # An unusual type of word-play where the whole clue is both the definition and the word-play. 
+    # lit clues are usually indicated by an exclamation mark
 	# This type of clue is normally only found in challenging puzzles
 	# example: Field entered by sportsmen ultimately!
 	# answer: Answer: ARENA. AREA = field. N = sportsmen ultimately (last letter). 
-	# AREA ‘entered by’ N = ARENA. (Whole clue is the definition)
+	# AREA entered by N = ARENA
     def andLitClue(self, clue, fillLength):
     	possWords = []
     	clue = clue.lower()
@@ -143,7 +153,7 @@ class SemanticAnalysis:
 
     	# this for loop doesn't exactly due this type of clue justice, it's just the beginning
     	for word in clueWords:
-    		wordSyns = self.synonyms[word]:
+    		wordSyns = self.synonyms[word]
     		for syn in wordSyns:
     			if len(syn) == fillLength:
     				possWords.append(syn)
@@ -152,9 +162,9 @@ class SemanticAnalysis:
 
 
 	# Take letters out of clue to provide solution. 
-	# Indicators: “heartlessly”, “loses”, “curtailed”, “dropped”, “gives up”
+	# Indicators: 'heartlessly', 'loses', 'curtailed', 'dropped', 'gives up'
 	# example: Parker loses a bed
-	# answer: MAN. COAT = Parker. COAT loses “A” for COT (a bed)
+	# answer: MAN. COAT = Parker. COAT loses 'A' for COT (a bed)
     def deletionClue(self, clue, fillLength):
     	possWords = []
     	clue = clue.lower()
@@ -185,7 +195,7 @@ class SemanticAnalysis:
     			if len(syn) == fillLength+1:
     				if letterToDrop in syn:
     					letterIndex = syn.index(letterToDrop)
-    					if letterIndex < len(syn)-1
+    					if letterIndex < len(syn)-1:
     						possWord = syn[:letterIndex] + syn[letterIndex+1:len(syn)]
     					else:
     						possWord = syn[:letterIndex]
@@ -196,7 +206,7 @@ class SemanticAnalysis:
 
 
     # Take the odd or even letters to form the solution. 
-    # Indicated by “odd”, “even”, “regularly” or “every second”
+    # Indicated by 'odd', 'even', 'regularly', or 'every second'
     # example: Observe odd characters in scene
     # answer: SEE. Odd letters of SCENE
     # idea for implementation: construct words of providing length by constructing various combinations of 
@@ -248,94 +258,210 @@ class SemanticAnalysis:
     	return possWords
 
 
-    	
-
-
-
-
     # First letter or letters provide the solution. 
-    # Indicated by “first”, “prime”, “lead”, “head”, “top”. 
-    # Note similarly “last”, “ultimate”, “final” can refer to the last letter.
+    # Indicated by 'first', 'prime', 'lead', 'head', 'top'
+    # Note similarly 'last', 'ultimate', 'final' can refer to the last letter
     # example: First class pile is really just tacky
     # answer: CHEAP. C = First class. HEAP = pile. C + HEAP = CHEAP (tacky)
     # example2: Starts to run around pointlessly in a bind 
     # answer: TRAP. First letters of To Run Around Pointlessly.
     # idea for implementation: if you see 'first' just try to make combinations of words from the first
     # letters of the clues following
-    def initialismClue(self, clue):
+    def initialismClue(self, clue, fillLength):
     	possWords = []
-    def endalismClue(self, clue):
+    	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueNoPunct = clueNoPunct.lower()
+    	clueWords = clueNoPunct.split()
+    	indexPossWord = -1
+    	if 'first' in clueWords:
+    		indexPossWord = clueWords.index('first') + 1
+    	elif 'prime' in clueWords:
+    		indexPossWord = clueWords.index('prime') + 1
+    	elif 'lead' in clueWords:
+    		indexPossWord = clueWords.index('lead') + 1
+    	elif 'head' in clueWords:
+    		indexPossWord = clueWords.index('head') + 1
+    	elif 'top' in clueWords:
+    		indexPossWord = clueWords.index('top') + 1
+    	elif 'starts' in clueWords:
+    		indexPossWord = clueWords.index('starts') + 1
+    	elif 'start' in clueWords:
+    		indexPossWord = clueWords.index('start') + 1
+
+    	if indexPossWord > -1:
+    		# will allow us to reconstruct possible word out of first letters of following words
+    		# example: Starts to run around pointlessly in a bind
+    		# answer TRAP 
+    		# therefore: to must can have index in array < len of clue words array - fill length
+    		# index of to: 1
+    		# fill length: 4
+    		# len of clue words must be at least: 5
+    		if indexPossWord <= len(clueWords)-fillLength:
+    			possword = clueWords[indexPossWord][0]
+    			for i in range(1, fillLength):
+    				possword += clueWords[indexPossWord+i][0]
+
+    			possWords.append(possword)
+
+    		# now need to consider example of first letter of following word plus synonym of next word
+    		if indexPossWord < len(clueWords) -1: # meaning there's at least one word following
+    			possword = clueWords[indexPossWord][0]
+    			nextWordSyns = self.synonyms[clueWords[indexPossWord+1]]
+    			for synonym in nextWordSyns:
+    				if len(synonym) == fillLength-1:
+    					possword += synonym
+    					possWords.append(possword)
+    				possword = clueWords[indexPossWord][0]
+
+
+    	return possWords
+
+
+
+
+	# same rules as for the above function, but taking the last letter of the clues
+    def endalismClue(self, clue, fillLength):
     	possWords = []
+    	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueNoPunct = clueNoPunct.lower()
+    	clueWords = clueNoPunct.split()
+    	indexPossWord = -1
+
+
+    	if 'last' in clueWords:
+    		indexPossWord = clueWords.index('last') + 1
+
+    	elif 'ultimate' in clueWords:
+    		indexPossWord = clueWords.index('ultimate') + 1
+
+    	elif 'final' in clueWords:
+    		indexPossWord = clueWords.index('ultimate') + 1
+
+    	if indexPossWord > -1:
+    		if indexPossWord <= len(clueWords)-fillLength:
+    			possword = clueWords[indexPossWord][-1]
+    			for i in range(1, fillLength):
+    				possword += clueWords[indexPossWord+i][-1]
+
+    			possWords.append(possword)
+
+
+    		# now need to consider example of first letter of following word plus synonym of next word
+    		if indexPossWord < len(clueWords) -1: # meaning there's at least one word following
+    			possword = clueWords[indexPossWord][-1]
+    			nextWordSyns = self.synonyms[clueWords[indexPossWord+1]]
+    			for synonym in nextWordSyns:
+    				if len(synonym) == fillLength-1:
+    					possword += synonym
+    					possWords.append(possword)
+
+    				possword = clueWords[indexPossWord][-1]
+
+    	return possWords
+
+
+
 
 
     ''' skipped '''
     # Instead of wordplay clues can have two definitions side by side to give the same solution
-    # example: Gone too far into no man’s land?
-    # answer: OVER THE TOP. 1. Exceeded bounds. 2. Historical slang for charging from war trenches into “no man’s land”.
+    # example: Gone too far into no man's land?
+    # answer: OVER THE TOP. 1. exceeded bounds. 2. historical slang for charging from war trenches into 'no man's land'
     def doubleDefinitionClue(self, clue):
     	possWords = []
+    	return possWords
 
-   
-   	# Homophones can be indicated by “heard”, “sounds like”, “audibly”, “noisily”, 
-   	# “out loud”, “say”, “spoken”
+
+    # Homophones can be indicated by 'heard', 'sounds like', 'audibly', 'noisily', 'out loud', 'say', 'spoken'
    	# example: Not even one sister heard (4)
 	# answer: NONE. Is a homophone of NUN (sister)
 	# idea for implementation: is there a homophone dictionary to import?
-    def homophoneClue(self, clue):
+    def homophoneClue(self, clue, fillLength):
     	possWords = []
+    	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueNoPunct = clueNoPunct.lower()
+    	clueWords = clueNoPunct.split()
+
+    	# will append all homophones of each word in the clue of the appropriate fill length
+    	for word in clueWords:
+    		if word in self.homophones:
+    			wordHomophones = self.homophones[word]
+    			for homophone in wordHomophones:
+    				if len(homophone) == fillLength:
+    					possWords.append(homophone)
+
+    	return possWords
 
 
+	''' need to finish this one '''
     # Anagrams are the most common clue-type. 
     # Indicated by potentially hundreds of words that loosely mean modify or change. 
-    # Some examples: “transfer”, “switch”, “cook”, “kill”, “reborn”, “mixed”, “turned”, 
-    # “out”, “off”, “warped”, “lost”, “moved”. Always consider potential anagram 
-    # indicators when solving any clue. Fodder (the letters to be jumbled) will 
-    # always appear before or after indicator. Multiple whole words can be used as 
-    # fodder however the number of letters must match the solution.
+    # some examples: 'transfer', 'switch', 'cook', 'kill', 'reborn', 'mixed', 'turned', 'out', 'off', 'warped'
+    # 'lost', 'moved'. The letters to be jumbled will always appear before or after indicator
     # example: Dress suiting a saint
-    # answer: IGNATIUS. “Dress” indicates anagram. Letters of “a suiting” provide IGNATIUS (a saint). Note the importance of the article “a”.
-    def anagramClue(self, clue):
+    # answer: IGNATIUS. "dress" indicates anagram. letters of 'a suiting' provide IGNATIUS (a saint)
+    def anagramClue(self, clue, fillLength):
     	possWords = []
+    	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueNoPunct = clueNoPunct.lower()
+    	clueNoSpaces = clueNoPunct.replace(" ", "")
+
+    	# basically need to permute through all possible ways of combining the clue letters
+    	
+    	# for i in range(fillLength):
+    		# have all characters as choice for first letter, have all letters as choice for second letter..
+    		# for j in range(len(clueNoSpaces)):
+
+    	return possWords
 
 
+
+
+
+
+    ''' not sure how to insert letters into word definitions, also this requires domain knowledge '''
     # Letters or words are placed inside other words. 
-    # Indicators: “within”, “in”, “around”, “about”, “contained”, “held”, 
-    # “inside”, “retain”, “keeps”, “into”.
+    # indicators: 'within', 'in', 'around', 'about', 'contained', 'held', 'inside', 'retain', 'keeps', 'into'
     # example: Superman retains interest in Painter
     # answer: TITIAN. TITAN = Superman. I = interest. Put I into TITAN gives the painter TITIAN.
     def containerClue(self, clue):
     	possWords = []
+    	return possWords
 
 
     ''' skipped '''
     # Charade clues are formed by joining individual clues together to create the solution. 
-    # Indicators not necessary but joining words like “with”, “follows”, “behind”, “after” 
-    # are likely. More complex cryptic crosswords will often combine charade clues with other 
+    # indicators not necessary but joining words like 'with', 'follows', 'behind', 'after' are likely.
+    # More complex cryptic crosswords will often combine charade clues with other 
     # types of word-play. The use of abbreviations in charade clues is very common.
     # example: Place on bottom of sack
     # answer: PLUNDER. PL = Place (street name abbrev). UNDER = on bottom. PL + UNDER = PLUNDER (to sack).
     def charadeClue(self, clue):
     	possWords = []
+    	return possWords
 
 
-	# Palindromes may be indicated by phases such as “either way”, 
-	# “going side to side”, “up and down”, ”read both ways”
+    ''' potential palindrome file: http://langs.eserver.org/palindromes.txt '''
+    ''' better: scrape these: http://www.palindromelist.net/ '''
+    # palindromes may be indicated by phrases such as 'either way', 'going side to side', 'up and down', 'read both ways'
 	# example: Advance in either direction
 	# answer: PUT UP. A palindrome meaning advance. 
 	# note for implementation: often the first word of a clue signals the most meaning
-    def palindromeClue(self, clue):
+    def palindromeClue(self, clue, fillLength):
     	possWords = []
+    	return possWords
+
 
 
     # The word is hidden within the letters of the wordplay. 
-    # Indicators of a hidden clue are “in part”, “partially”, “in”, “within”, “hides”, 
-    # “conceals”, “some”, and “held by”
-    # example: Delia’s pickle contains jelly (5)
+    # indicators of a hidden clue are 'in part', 'partially', 'in', 'within', 'hides', 'conceals', 'some', 'held by'
+    # example: Delia's pickle contains jelly
 	# Answer: ASPIC
 	# idea for implementation: basically create proper length combinations of all words in the string
 	# of the desired length of the fill word
     def hiddenClue(self, clue, fillLength):
 		clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+		clueNoPunct = clueNoPunct.lower()
 		clueWords = clueNoPunct.split()
 		clueStr = ''
 		for word in clueWords:
@@ -345,12 +471,12 @@ class SemanticAnalysis:
 			possWords.append(clueStr[i:i+fillLength])
 
 
-
+		return possWords
 
     # Reversals
 	# The reverse of part of the clue provides the definition. 
-	# Indicators: “back”, “reflected”, “turned” “going up” (in a down clue), 
-	# “west” or “left” (in an across clue).
+	# indicators: 'back', 'reflected', 'turned', 'going up' (in a down clue)
+	# 'west' or 'left' (in an across clue)
 	# example: Sketcher went up to get reward
 	# answer: drawer
 	# another example: Go no further putting the crockery up
@@ -359,6 +485,7 @@ class SemanticAnalysis:
 	# idea #2 for implementation: reference synonyms of words present in the clue
     def reversalPresent(self, clue, fillLength):
     	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueNoPunct = clueNoPunct.lower()
     	clueWords = clueNoPunct.split()
     	possWords = []
 
@@ -369,7 +496,7 @@ class SemanticAnalysis:
     			possWords.append(word[::-1]) # this reverses the word
 
 
-
+    	return possWords
 
 
     # In this type of clue the whole clue is usually the definition in an unusual context. 
@@ -380,17 +507,18 @@ class SemanticAnalysis:
 	# what combos of words can we come up with that match the designated length ?
     def questionPresent(self, clue, fillLength):
     	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueNoPunct = clueNoPunct.lower()
     	clueWords = clueNoPunct.split()
     	possWords = []
 
     	# will want synonyms of each word and potentially their combos
     	for word in clueWords:
-    		for synonym in self.synonyms[word]: ''' self.synonyms doesn't exist yet '''
+    		for synonym in self.synonyms[word]:
     			possWords.append(synonym)
 
     	# now filter by word length in poss words and combinations of words in poss lengths
     	# that form the accurate length word
-
+    	return possWords
 
 
 
@@ -454,11 +582,16 @@ class SemanticAnalysis:
     		if word in self.languageIndicators:
     			typeClue.append("language")
 
+    	return typeClue
 
 
-    def mostProbableWords(self, fillLength, clue, type):
-    	typeClue = self.typeOfClue(clue)
+
+    def mostProbableWords(self, fillLength, clue, fillType):
+    	typeClue = self.typeOfClue(clue, fillType)
     	possWords = []
+
+    	''' may need to check that typeClue isn't empty'''
+
     	for t in typeClue:
 
     		if t == "question":
@@ -478,11 +611,11 @@ class SemanticAnalysis:
     			possWords.extend(newPossWords)
 
     		elif t == "reverse":
-    			newPossWords = self.reversalPresent(clue)
+    			newPossWords = self.reversalPresent(clue, fillLength)
     			possWords.extend(newPossWords)
 
     		elif t == "homophone":
-    			newPossWords = self.homophoneClue(clue)
+    			newPossWords = self.homophoneClue(clue, fillLength)
     			possWords.extend(newPossWords)
 
     		elif t == "oddEven":
@@ -498,15 +631,15 @@ class SemanticAnalysis:
     			possWords.extend(newPossWords)
 
     		elif t == "anagram":
-    			newPossWords = self.anagramClue(clue)
+    			newPossWords = self.anagramClue(clue, fillLength)
     			possWords.extend(newPossWords)
 
     		elif t == "initialist":
-    			newPossWords = self.initialismClue(clue)
+    			newPossWords = self.initialismClue(clue, fillLength)
     			possWords.extend(newPossWords)
 
     		elif t == "endalist":
-    			newPossWords = self.endalismClue(clue)
+    			newPossWords = self.endalismClue(clue, fillLength)
     			possWords.extend(newPossWords)
 
     		elif t == "language":
@@ -514,22 +647,20 @@ class SemanticAnalysis:
     			possWords.extend(newPossWords)
 
 
-
-
-
-
+    	return possWords
 
 def main():
 	sa = SemanticAnalysis()
 	sa.trainCluesData("cluesFormatted.txt")
 	sa.trainSynonyms("synonyms_en.txt")
+	sa.trainHomophones("homophones.txt")
 
 	sa.trainCrosswordsWords("crossWordiest.txt", "crossWordiest")
 	sa.trainCrosswordsWords("most_common.txt", "mostCommon")
 
 
 	clue = "Sketcher went up to get reward"
-	mostProbWords = sa.mostProbableWords(6, clue, "across")
+	mostProbWords = sa.mostProbableWords(6, clue, "down")
 	print mostProbWords
 
 
