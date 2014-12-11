@@ -15,6 +15,7 @@ class SemanticAnalysis:
     	self.answerMap = {}
     	self.crossWordiest = {}
     	self.mostCommonWords = {}
+    	self.synonyms = {} # a dictionary mapping each word to its list of synonyms, the list will include the word itself
 
     	''' can also create a dict of all indicators to the type of clue that they indicate '''
 
@@ -35,6 +36,33 @@ class SemanticAnalysis:
     	''' there are hundreds of these and they are the most common clue type -- see if there's an anagram dict '''
     	''' most often they are words signaling 'to make change' '''
     	self.anagramIndicators = ['transfer', 'switch', 'cook', 'kill', 'reborn', 'mixed', 'turned', 'out', 'off', 'warped', 'lost', 'moved']
+
+
+    def trainSynonyms(self, synonyms_filename):
+    	# the file is formatted such that each line contains a set of synonyms
+    	# need to map each word on each line to all other words on the line
+
+		inputF = open("synonyms_en.txt")
+		lines = inputF.readlines()
+
+		synonyms = []
+		allSynonyms = {}
+
+		for line in lines:
+			lineNoPunct = line.translate(string.maketrans("",""), string.punctuation) # ignore all punctuation
+			line = lineNoPunct.strip()
+			line = line.lower() # ignore all capitalization
+			synonymsPresent = line.split()
+			synonyms.append(synonymsPresent)
+
+		for i in range(len(synonyms)):
+			for j in range(len(synonyms[i])):
+
+				allSynonyms[synonyms[i][j]] = synonyms[i]
+
+		self.synonyms = allSynonyms
+
+
 
 
     def trainCluesData(self, clues_filename):
@@ -90,30 +118,81 @@ class SemanticAnalysis:
     # def visualClue(self, clue):
 
 
+    ''' need to set domains of common foreign language words used in clue answers '''
 	# Basic Latin-based languages are sometimes used in clues. 
 	# These are typically articles of French, Spanish and German. 
 	# clue: Man on the Spanish foot (4)
 	# answer: HEEL. HE = man. EL = the in Spanish. HE + EL = HEEL (foot).
     def languageClue(self, clue):
     	possWords = []
+    	return possWords
 
 
+    ''' this one is tough as it combines several clue types '''
 	# An unusual type of word-play where the whole clue is both the definition and the word-play. 
 	# “& lit.” clues are normally indicated by an exclamation mark.  
 	# This type of clue is normally only found in challenging puzzles
 	# example: Field entered by sportsmen ultimately!
 	# answer: Answer: ARENA. AREA = field. N = sportsmen ultimately (last letter). 
 	# AREA ‘entered by’ N = ARENA. (Whole clue is the definition)
-    def andLitClue(self, clue):
+    def andLitClue(self, clue, fillLength):
     	possWords = []
+    	clue = clue.lower()
+    	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueWords = clueNoPunct.strip()
+
+    	# this for loop doesn't exactly due this type of clue justice, it's just the beginning
+    	for word in clueWords:
+    		wordSyns = self.synonyms[word]:
+    		for syn in wordSyns:
+    			if len(syn) == fillLength:
+    				possWords.append(syn)
+
+    	return possWords
 
 
 	# Take letters out of clue to provide solution. 
 	# Indicators: “heartlessly”, “loses”, “curtailed”, “dropped”, “gives up”
 	# example: Parker loses a bed
 	# answer: MAN. COAT = Parker. COAT loses “A” for COT (a bed)
-    def deletionClue(self, clue):
+    def deletionClue(self, clue, fillLength):
     	possWords = []
+    	clue = clue.lower()
+    	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueWords = clueNoPunct.strip()
+    	lossyWordIndex = -1
+    	if 'heartlessly' in clueNoPunct:
+    		lossyWordIndex = clueWords.index('heartlessly')
+
+    	elif 'loses' in clueNoPunct:
+    		lossyWordIndex = clueWords.index('loses')
+
+    	elif 'curtailed' in clueNoPunct:
+    		lossyWordIndex = clueWords.index('curtailed')
+
+    	elif 'dropped' in clueNoPunct:
+    		lossyWordIndex = clueWords.index('dropped')
+
+    	elif 'gives up' in clueNoPunct:
+    		lossyWordIndex = clueWords.index('up')
+
+    	# make the assumption that the letter drops comes after deletion indicator
+    	letterToDrop = clueWords[lossyWordIndex+1] 
+
+    	for word in clueWords:
+    		wordSyns = self.synonyms[word]
+    		for syn in wordSyns:
+    			if len(syn) == fillLength+1:
+    				if letterToDrop in syn:
+    					letterIndex = syn.index(letterToDrop)
+    					if letterIndex < len(syn)-1
+    						possWord = syn[:letterIndex] + syn[letterIndex+1:len(syn)]
+    					else:
+    						possWord = syn[:letterIndex]
+    					possWords.append(possWord)
+
+
+    	return possWords
 
 
     # Take the odd or even letters to form the solution. 
@@ -123,8 +202,55 @@ class SemanticAnalysis:
     # idea for implementation: construct words of providing length by constructing various combinations of 
     # words from the letters in the clue, as long as they are in order, can give higher weight to those
     # that come after trigger words like 'in', or can take out those words
-    def oddEvenClue(self, clue):
+    def oddEvenClue(self, clue, fillLength):
     	possWords = []
+    	clue = clue.lower()
+    	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
+    	clueWords = clueNoPunct.strip()
+    	odd = False
+    	even = False
+    	# if we are searching for odd or even fill
+    	if 'even' in clueNoPunct:
+    		even = True
+    	elif 'odd' in clueNoPunct:
+    		odd = True
+    	# we have to generate both odd and even letters to form possible solutions if neither even or odd are present
+    	if not odd and not even:
+    		even = True
+    		odd = True
+
+
+    	for word in clueWords:
+
+    		if odd:
+    		# can generate a fill word taking odd letters from the word
+    			if len(word) >= fillLength*2 - 1:
+    				wordIndex = 0
+    				newPossWord = ""
+    				for i in range(fillLength):
+    					newPossWord += word[wordIndex]
+    					wordIndex += 2
+
+    				possWords.append(newPossWord)
+
+    		if even:
+    			# can generate a fill word taking even letters from the word
+    			if len(word) >= fillLength*2:
+    				wordIndex = 1
+    				newPossWord = ""
+    				for i in range(fillLength):
+    					newPossWord += newPossWord[wordIndex]
+    					wordIndex += 2
+
+    				possWords.append(newPossWord)
+
+
+    	return possWords
+
+
+    	
+
+
 
 
     # First letter or letters provide the solution. 
@@ -330,49 +456,62 @@ class SemanticAnalysis:
 
 
 
-    def mostProbableWord(self, fillLength, clue, type):
+    def mostProbableWords(self, fillLength, clue, type):
     	typeClue = self.typeOfClue(clue)
     	possWords = []
     	for t in typeClue:
 
     		if t == "question":
-    			self.questionPresent(clue, fillLength) # need to figure out how to append possible words based on this type of clue
+    			newPossWords = self.questionPresent(clue, fillLength) # need to figure out how to append possible words based on this type of clue
+    			possWords.extend(newPossWords)
 
     		elif t == "exclamation":
-    			self.andLitClue(clue)
+    			newPossWords = self.andLitClue(clue, fillLength)
+    			possWords.extend(newPossWords)
 
     		elif t == "palindrome":
-    			self.palindromeClue(clue, fillLength)
+    			newPossWords = self.palindromeClue(clue, fillLength)
+    			possWords.extend(newPossWords)
 
     		elif t == "hidden":
-    			self.hiddenClue(clue)
+    			newPossWords = self.hiddenClue(clue)
+    			possWords.extend(newPossWords)
 
     		elif t == "reverse":
-    			self.reversalPresent(clue)
+    			newPossWords = self.reversalPresent(clue)
+    			possWords.extend(newPossWords)
 
     		elif t == "homophone":
-    			self.homophoneClue(clue)
+    			newPossWords = self.homophoneClue(clue)
+    			possWords.extend(newPossWords)
 
     		elif t == "oddEven":
-    			self.oddEvenClue(clue)
+    			newPossWords = self.oddEvenClue(clue, fillLength)
+    			possWords.extend(newPossWords)
 
     		elif t == "deletion":
-    			self.deletionClue(clue)
+    			newPossWords = self.deletionClue(clue, fillLength)
+    			possWords.extend(newPossWords)
 
     		elif t == "container":
-    			self.containerClue(clue)
+    			newPossWords = self.containerClue(clue)
+    			possWords.extend(newPossWords)
 
     		elif t == "anagram":
-    			self.anagramClue(clue)
+    			newPossWords = self.anagramClue(clue)
+    			possWords.extend(newPossWords)
 
     		elif t == "initialist":
-    			self.initialismClue(clue)
+    			newPossWords = self.initialismClue(clue)
+    			possWords.extend(newPossWords)
 
     		elif t == "endalist":
-    			self.endalismClue(clue)
+    			newPossWords = self.endalismClue(clue)
+    			possWords.extend(newPossWords)
 
     		elif t == "language":
-    			self.languageClue(clue)
+    			newPossWords = self.languageClue(clue)
+    			possWords.extend(newPossWords)
 
 
 
@@ -383,13 +522,15 @@ class SemanticAnalysis:
 def main():
 	sa = SemanticAnalysis()
 	sa.trainCluesData("cluesFormatted.txt")
+	sa.trainSynonyms("synonyms_en.txt")
 
 	sa.trainCrosswordsWords("crossWordiest.txt", "crossWordiest")
 	sa.trainCrosswordsWords("most_common.txt", "mostCommon")
 
 
 	clue = "Sketcher went up to get reward"
-	mostProbableWord = sa.mostProbableWord(6, clue, "across")
+	mostProbWords = sa.mostProbableWords(6, clue, "across")
+	print mostProbWords
 
 
 

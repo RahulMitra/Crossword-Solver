@@ -5,21 +5,25 @@ import string
 
 def main():
 
-	clue = "Delia's pickle contains jelly"
-	fillLength = 5
-	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
-	print clueNoPunct
-	clueWords = clueNoPunct.split()
-	clueStr = ''
-	for word in clueWords:
-		clueStr += word
-	print clueStr
-	possWords = []
-	for i in range(len(clueStr)-fillLength):
-		# possWord = clueStr[i:i+fillLength]
-		possWords.append(clueStr[i:i+fillLength])
+	inputF = open("synonyms_en.txt")
+	lines = inputF.readlines()
 
-	print possWords
+	synonyms = []
+	allSynonyms = {}
+
+	for line in lines:
+		lineNoPunct = line.translate(string.maketrans("",""), string.punctuation)
+		line = lineNoPunct.strip()
+		synonymsPresent = line.split()
+		synonyms.append(synonymsPresent)
+
+	for i in range(len(synonyms)):
+		for j in range(len(synonyms[i])):
+
+			allSynonyms[synonyms[i][j]] = synonyms[i]
+
+    		
+	print allSynonyms
 
 
 
