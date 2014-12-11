@@ -7,9 +7,6 @@ import string
 ''' importing synonyms: http://stackoverflow.com/questions/2667057/english-dictionary-as-txt-or-xml-file-with-support-of-synonyms '''
 
 
-''' **** IMPORTANT NEEDS FIXIING *** '''
-''' everywhere where self.synonyms is being used, need to first add 'if' statement that the word is in self.synonyms '''
-
 
 
 class SemanticAnalysis:
@@ -153,10 +150,11 @@ class SemanticAnalysis:
 
     	# this for loop doesn't exactly due this type of clue justice, it's just the beginning
     	for word in clueWords:
-    		wordSyns = self.synonyms[word]
-    		for syn in wordSyns:
-    			if len(syn) == fillLength:
-    				possWords.append(syn)
+    		if word in self.synonyms:
+    			wordSyns = self.synonyms[word]
+    			for syn in wordSyns:
+    				if len(syn) == fillLength:
+    					possWords.append(syn)
 
     	return possWords
 
@@ -190,16 +188,17 @@ class SemanticAnalysis:
     	letterToDrop = clueWords[lossyWordIndex+1] 
 
     	for word in clueWords:
-    		wordSyns = self.synonyms[word]
-    		for syn in wordSyns:
-    			if len(syn) == fillLength+1:
-    				if letterToDrop in syn:
-    					letterIndex = syn.index(letterToDrop)
-    					if letterIndex < len(syn)-1:
-    						possWord = syn[:letterIndex] + syn[letterIndex+1:len(syn)]
-    					else:
-    						possWord = syn[:letterIndex]
-    					possWords.append(possWord)
+    		if word in self.synonyms:
+    			wordSyns = self.synonyms[word]
+    			for syn in wordSyns:
+    				if len(syn) == fillLength+1:
+    					if letterToDrop in syn:
+    						letterIndex = syn.index(letterToDrop)
+    						if letterIndex < len(syn)-1:
+    							possWord = syn[:letterIndex] + syn[letterIndex+1:len(syn)]
+    						else:
+    							possWord = syn[:letterIndex]
+    						possWords.append(possWord)
 
 
     	return possWords
@@ -306,12 +305,14 @@ class SemanticAnalysis:
     		# now need to consider example of first letter of following word plus synonym of next word
     		if indexPossWord < len(clueWords) -1: # meaning there's at least one word following
     			possword = clueWords[indexPossWord][0]
-    			nextWordSyns = self.synonyms[clueWords[indexPossWord+1]]
-    			for synonym in nextWordSyns:
-    				if len(synonym) == fillLength-1:
-    					possword += synonym
-    					possWords.append(possword)
-    				possword = clueWords[indexPossWord][0]
+    			nextword = clueWords[indexPossWord+1]
+    			if nextword in self.synonyms:
+    				nextWordSyns = self.synonyms[nextword]
+    				for synonym in nextWordSyns:
+    					if len(synonym) == fillLength-1:
+    						possword += synonym
+    						possWords.append(possword)
+    					possword = clueWords[indexPossWord][0]
 
 
     	return possWords
@@ -349,13 +350,15 @@ class SemanticAnalysis:
     		# now need to consider example of first letter of following word plus synonym of next word
     		if indexPossWord < len(clueWords) -1: # meaning there's at least one word following
     			possword = clueWords[indexPossWord][-1]
-    			nextWordSyns = self.synonyms[clueWords[indexPossWord+1]]
-    			for synonym in nextWordSyns:
-    				if len(synonym) == fillLength-1:
-    					possword += synonym
-    					possWords.append(possword)
+    			nextword = clueWords[indexPossWord+1]
+    			if nextword in self.synonyms:
+    				nextWordSyns = self.synonyms[nextword]
+    				for synonym in nextWordSyns:
+    					if len(synonym) == fillLength-1:
+    						possword += synonym
+    						possWords.append(possword)
 
-    				possword = clueWords[indexPossWord][-1]
+    					possword = clueWords[indexPossWord][-1]
 
     	return possWords
 
@@ -513,8 +516,9 @@ class SemanticAnalysis:
 
     	# will want synonyms of each word and potentially their combos
     	for word in clueWords:
-    		for synonym in self.synonyms[word]:
-    			possWords.append(synonym)
+    		if word in self.synonyms:
+    			for synonym in self.synonyms[word]:
+    				possWords.append(synonym)
 
     	# now filter by word length in poss words and combinations of words in poss lengths
     	# that form the accurate length word
