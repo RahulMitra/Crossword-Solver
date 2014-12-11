@@ -661,6 +661,7 @@ def main():
 
 	clue = "Sketcher went up to get reward"
 	mostProbWords = sa.mostProbableWords(6, clue, "down")
+	print clue
 	print mostProbWords
 
 
