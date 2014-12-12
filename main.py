@@ -164,6 +164,18 @@ def chooseBest(allAssignments, answerMap):
     print "Best score = ", bestScore
     return optimalSolution
 
+#Prints error rate stats
+def errorRate(realAnswers, best):
+    inCommon = 0.0
+    for entry in best:
+        if entry[2] in realAnswers:
+            inCommon += 1
+
+    rate = float(inCommon)/len(realAnswers)
+    print "Number words in common: ", inCommon
+    print "Total words: ", len(realAnswers)
+    print "Percent correct: ", rate
+
 
 
 def main():
@@ -173,9 +185,9 @@ def main():
     f = open("output_solutions.txt", 'w')
     f.close()
 
-    crossword_file = "crosswords/04-03-2014.json"
+    # crossword_file = "crosswords/04-03-2014.json"
     # crossword_file = "crosswords/4by4.json"
-    # crossword_file = "crosswords/4by4v2.json"
+    crossword_file = "crosswords/4by4v2.json"
 
     #english_words_file = "crosswords/4by4sol.txt"
     english_words_file = "wordsEnShort.txt"
@@ -183,7 +195,7 @@ def main():
     # create crossword puzzle object and load with data from JSON file
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
-    cw.printFills()
+    # cw.printFills()
     englishWordsData = SolverUtil.parseEnglishWordsFile(english_words_file)
     domain = SolverUtil.englishLengthToWords(englishWordsData) 
     # print domain
@@ -191,6 +203,11 @@ def main():
     # create CSP, train data, create variables, and create binary potentials
     csp = CSPUtil.CSP()
     answerMap = trainFeatureVector(csp, "cluesFormatted.txt")
+
+
+    #### THIS IS WRONG, NEED TO FIND A WAY TO GET REAL ANSWERS FROM JSON ---------------------------------
+    realAnswers = answerMap.keys()
+    'List of answers = ', realAnswers
 
     ''' create semantic analysis object to get a list of most probable words given a certain clue '''
     sa = SemanticAnalysis.SemanticAnalysis()
@@ -211,7 +228,9 @@ def main():
     search = CSPUtil.BacktrackingSearch()
     print "Solving CSP..."
     allAssignments = search.solve(csp)
-    print chooseBest(allAssignments, answerMap)
+    best = chooseBest(allAssignments, answerMap)
+    print best
+    errorRate(realAnswers, best)
 
 
 
