@@ -50,8 +50,6 @@ def createCSPVariables(csp, cw, domain, sa):
     for fill in cw.fills:
 
         fillDomain = decreaseDomain(fill, domain[fill.fill_length], csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap, sa)
-        if 'ill' in fillDomain:
-            print "michael fucked up"
 
         csp.add_variable((fill.clue_index, fill.clue_type, fill.clue), fillDomain)
         info_str = "Added CSP Variable: (" + str(fill.clue_index) + " " + str(fill.clue_type) \
@@ -163,7 +161,8 @@ def chooseBest(allAssignments, answerMap):
             bestScore = solutionScore
             optimalSolution = solution
 
-        return optimalSolution
+    print "Best score = ", bestScore
+    return optimalSolution
 
 
 
@@ -174,12 +173,12 @@ def main():
     f = open("output_solutions.txt", 'w')
     f.close()
 
-    # crossword_file = "crosswords/04-03-2014.json"
+    crossword_file = "crosswords/04-03-2014.json"
     # crossword_file = "crosswords/4by4.json"
-    crossword_file = "crosswords/4by4v2.json"
+    # crossword_file = "crosswords/4by4v2.json"
 
     #english_words_file = "crosswords/4by4sol.txt"
-    english_words_file = "wordsEn.txt"
+    english_words_file = "wordsEnShort.txt"
 
     # create crossword puzzle object and load with data from JSON file
     cw = CrosswordUtil.Crossword()
