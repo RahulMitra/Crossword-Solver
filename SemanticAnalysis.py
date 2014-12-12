@@ -1,5 +1,6 @@
 import SolverUtil
 import string
+import itertools
 
 
 ''' abbreviations: http://en.wikipedia.org/wiki/Crossword_abbreviations '''
@@ -20,6 +21,7 @@ class SemanticAnalysis:
     	self.mostCommonWords = {}
     	self.synonyms = {} # a dictionary mapping each word to its list of synonyms, the list will include the word itself
     	self.homophones = {} # a dictionary mapping each word to its list of homophones, or words that sound the same
+    	self.lenToCrossWordiest = {}
 
     	''' can also create a dict of all indicators to the type of clue that they indicate '''
 
@@ -91,7 +93,14 @@ class SemanticAnalysis:
     	if typeWords == "crossWordiest":
     		for line in lines:
     			lineElems = line.split()
-    			self.crossWordiest[lineElems[0].lower()] = float(lineElems[1].strip())
+    			newWord = lineElems[0].lower().strip()
+    			self.crossWordiest[newWord] = float(lineElems[1].strip())
+    			if len(newWord) in self.lenToCrossWordiest:
+    				self.lenToCrossWordiest[len(newWord)].append(newWord)
+
+    			else:
+    				self.lenToCrossWordiest[len(newWord)] = [newWord]
+
 
     	elif typeWords == "mostCommon":
     		for line in lines:
@@ -403,6 +412,7 @@ class SemanticAnalysis:
     # 'lost', 'moved'. The letters to be jumbled will always appear before or after indicator
     # example: Dress suiting a saint
     # answer: IGNATIUS. "dress" indicates anagram. letters of 'a suiting' provide IGNATIUS (a saint)
+
     def anagramClue(self, clue, fillLength):
     	possWords = []
     	clueNoPunct = clue.translate(string.maketrans("",""), string.punctuation)
@@ -410,14 +420,12 @@ class SemanticAnalysis:
     	clueNoSpaces = clueNoPunct.replace(" ", "")
 
     	# basically need to permute through all possible ways of combining the clue letters
-    	
-    	# for i in range(fillLength):
-    		# have all characters as choice for first letter, have all letters as choice for second letter..
-    		# for j in range(len(clueNoSpaces)):
+    	possWords = ["".join(perm) for perm in itertools.permutations(clueNoSpaces, fillLength)]
+    	for word in possWords:
+    		if len(word) != fillLength: 
+    			possWords.remove(word)
 
     	return possWords
-
-
 
 
 
@@ -611,7 +619,7 @@ class SemanticAnalysis:
     			possWords.extend(newPossWords)
 
     		elif t == "hidden":
-    			newPossWords = self.hiddenClue(clue)
+    			newPossWords = self.hiddenClue(clue, fillLength)
     			possWords.extend(newPossWords)
 
     		elif t == "reverse":
@@ -651,6 +659,7 @@ class SemanticAnalysis:
     			possWords.extend(newPossWords)
 
 
+    	possWords.extend(self.lenToCrossWordiest[fillLength]) # will also add on any 'crosswordiest' words of the right length
     	return possWords
 
 def main():

@@ -304,15 +304,25 @@ class BacktrackingSearch():
 
         # Print summary of solutions.
         self.print_stats()
+        return self.allAssignments
 
     def printOptimalAssignment(self):
         print "\nSOLUTION FOUND:"
+        f = open("output_solutions.txt", 'a')
+        f.write('SOLUTION FOUND:\n')
         for key in self.optimalAssignment:
             clue_index = key[0]
             clue_type = key[1]
             info_str = str(clue_index) + " " + str(clue_type) + ": " + str(self.optimalAssignment[key])
             print info_str
+            f.write(info_str + '\n')
         print ""
+        f.write('\n')
+        f.close()
+        
+
+
+
 
     def backtrack(self, assignment, numAssigned, weight):
         """
@@ -415,9 +425,6 @@ class BacktrackingSearch():
                     # restore the previous domains
                         self.domains = localCopy
                         assignment[var] = None
-
-        for var2, potential in self.csp.binaryPotentials[var].iteritems():
-            self.csp.valNames[var2]
 
 
     def get_unassigned_variable(self, assignment):

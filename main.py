@@ -5,6 +5,7 @@ import numpy as np
 import sys
 from multiprocessing import Process, Manager
 import string
+import SemanticAnalysis
 
 # -------------------------------------------------------------------------------------------------------------
 # Clue Analysis Code
@@ -12,32 +13,46 @@ import string
 def trainFeatureVector(csp, clues_training_data):
     print "Reading clue data and training feature vector..."
     cluesData = SolverUtil.parseCluesFile(clues_training_data)
-    csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap = SolverUtil.analyzeCluesInput(cluesData)    
+    csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap = SolverUtil.analyzeCluesInput(cluesData)
+    return csp.answerMap    
 
 # will decrease the domain size based on the fill object's clue
-def decreaseDomain(fill, currDomain, wordsToClues, cluesToWords, wordFreqs, answerMap):
+def decreaseDomain(fill, currDomain, wordsToClues, cluesToWords, wordFreqs, answerMap, sa):
     clue = fill.clue.translate(string.maketrans("",""), string.punctuation)
-    # print cluesToWords
-    if clue in cluesToWords:
-        return cluesToWords[clue]
+    newDomain = []
 
-    tupleDomains = [(currDomain[i], i) for i in range(len(currDomain))]
-    sortedDomains = SolverUtil.orderValues(fill.clue, tupleDomains, cluesToWords, wordFreqs, answerMap)
-    sortedWordDomains = [currDomain[i] for i in range(len(sortedDomains))]
-    if len(sortedWordDomains) > 10:
-        return sortedWordDomains[:10] # return just top 100 hits for the domain
+
+    ''' this places most probable words at the beginning of the possible domain values, given a certain clue '''
+
+    newDomain = sa.mostProbableWords(fill.fill_length, fill.clue, fill.clue_type) # this puts most probable words at beginning 
+    newDomain.extend(currDomain)    
+
+
+
+    ''' this will call order values based on words that have appeared before '''
+    # tupleDomains = [(currDomain[i], i) for i in range(len(currDomain))]
+    # sortedDomains = SolverUtil.orderValues(fill.clue, tupleDomains, cluesToWords, wordFreqs, answerMap)
+    # sortedWordDomains = [currDomain[i] for i in range(len(sortedDomains))]
+    # newDomain.extend(sortedWordDomains)
+
+    if len(newDomain) > 500:
+        return newDomain[:500]
     else:
-        return sortedWordDomains
+        return newDomain
 
 
 # -------------------------------------------------------------------------------------------------------------
 # CSP Generation Code
 # -------------------------------------------------------------------------------------------------------------
-def createCSPVariables(csp, cw, domain):
+def createCSPVariables(csp, cw, domain, sa):
     # Create CSP variable for each fill in the crossword puzzle
     print "Adding CSP Variables..."
     for fill in cw.fills:
-        fillDomain = decreaseDomain(fill, domain[fill.fill_length], csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap)
+
+        fillDomain = decreaseDomain(fill, domain[fill.fill_length], csp.wordsToClues, csp.cluesToWords, csp.wordFreqs, csp.answerMap, sa)
+        if 'ill' in fillDomain:
+            print "michael fucked up"
+
         csp.add_variable((fill.clue_index, fill.clue_type, fill.clue), fillDomain)
         info_str = "Added CSP Variable: (" + str(fill.clue_index) + " " + str(fill.clue_type) \
             + ") with domain length " + str(fill.fill_length)
@@ -47,6 +62,7 @@ def generate_binary_potential_table(csp, across_fill_var, down_fill_var, across_
                                 down_intersecting_index, potentials_tables):
 
     def potential(across_str, down_str):
+        # print across_str, across_intersecting_index, "and", down_str, down_intersecting_index
         return across_str[int(across_intersecting_index)] == down_str[int(down_intersecting_index)]
 
     csp.add_binary_potential(across_fill_var, down_fill_var, potential, potentials_tables)
@@ -123,12 +139,44 @@ def createCSPBinaryPotentials(csp, cw, num_concurrent_jobs):
     # execute jobs in parallel (multi-processing makes process for each one)
     executeJobsMultithreaded(csp, jobs, potentials_tables, num_concurrent_jobs)    
 
+def chooseBest(allAssignments, answerMap):
+    optimalSolution = None
+    bestScore = 0
+    for solution in allAssignments:
+        # solution is a dictionary, where each key is a (clue number, clue type, clue) mapped to the answer
+        clues = solution.keys()
+
+        solutionScore = 0 
+        for clue in clues:
+            wordedClue = clue[2].lower()
+            answer = solution[clue]
+            wordedClue = wordedClue.translate(string.maketrans("",""), string.punctuation)
+            # answer = answer.translate(string.maketrans("",""), string.punctuation)
+            print "clue: ", clue
+            print "answer: ", answer 
+            pairScore = SolverUtil.semanticAnalysis(wordedClue, answer, answerMap)
+            print pairScore, '\n'
+            solutionScore += pairScore
+
+        print "-------Solution Score: ", solutionScore, "---------------"
+        if solutionScore > bestScore:
+            bestScore = solutionScore
+            optimalSolution = solution
+
+        return optimalSolution
+
+
 
 def main():
     print "Reading crossword puzzle JSON data and forming CSP..."
+    
+    # need this to clear out previous solutions file
+    f = open("output_solutions.txt", 'w')
+    f.close()
 
-    crossword_file = "crosswords/04-03-2014.json"
-    #crossword_file = "crosswords/4by4.json"
+    # crossword_file = "crosswords/04-03-2014.json"
+    # crossword_file = "crosswords/4by4.json"
+    crossword_file = "crosswords/4by4v2.json"
 
     #english_words_file = "crosswords/4by4sol.txt"
     english_words_file = "wordsEn.txt"
@@ -136,14 +184,24 @@ def main():
     # create crossword puzzle object and load with data from JSON file
     cw = CrosswordUtil.Crossword()
     cw.load(crossword_file)
+    cw.printFills()
     englishWordsData = SolverUtil.parseEnglishWordsFile(english_words_file)
     domain = SolverUtil.englishLengthToWords(englishWordsData) 
     # print domain
 
     # create CSP, train data, create variables, and create binary potentials
     csp = CSPUtil.CSP()
-    trainFeatureVector(csp, "cluesFormatted.txt")
-    createCSPVariables(csp, cw, domain)
+    answerMap = trainFeatureVector(csp, "cluesFormatted.txt")
+
+    ''' create semantic analysis object to get a list of most probable words given a certain clue '''
+    sa = SemanticAnalysis.SemanticAnalysis()
+    sa.trainCluesData("cluesFormatted.txt")
+    sa.trainSynonyms("synonyms_en.txt")
+    sa.trainHomophones("homophones.txt")
+    sa.trainCrosswordsWords("crossWordiest.txt", "crossWordiest")
+
+
+    createCSPVariables(csp, cw, domain, sa)
 
     # Sets the number of jobs to execute in parallel when computing
     # the binary potentials, as this is an extremely computation heavy step
@@ -153,7 +211,11 @@ def main():
     # Solve the CSP
     search = CSPUtil.BacktrackingSearch()
     print "Solving CSP..."
-    search.solve(csp)
+    allAssignments = search.solve(csp)
+    print chooseBest(allAssignments, answerMap)
+
+
+
 
 if __name__=='__main__':
     main()
