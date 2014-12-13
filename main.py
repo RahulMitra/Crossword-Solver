@@ -168,6 +168,7 @@ def chooseBest(allAssignments, answerMap):
 def errorRate(realAnswers, best):
     inCommon = 0.0
     for entry in best:
+        print entry
         if entry[2] in realAnswers:
             inCommon += 1
 
@@ -206,8 +207,9 @@ def main():
 
 
     #### THIS IS WRONG, NEED TO FIND A WAY TO GET REAL ANSWERS FROM JSON ---------------------------------
-    realAnswers = answerMap.keys()
-    'List of answers = ', realAnswers
+    # realAnswers = answerMap.keys()
+    # 'List of answers = ', realAnswers
+    realAnswers = cw.getAnswers()
 
     ''' create semantic analysis object to get a list of most probable words given a certain clue '''
     sa = SemanticAnalysis.SemanticAnalysis()
@@ -237,3 +239,13 @@ def main():
 
 if __name__=='__main__':
     main()
+
+
+# what anna did:
+# 1. line 208, 209 say 'this is wrong, need to get answers from json' so within crossword util
+# 2. note: for some reason even though the list of words is being printed out correctly for 'best answers',  
+#  and the solution matches the set of best answers, it is saying that the accuracy is 0  
+# 3. in semantic analysis, added code to take in 'cryptic-clues-testData.txt' to go through the cryptic types
+# of clues and print out the lists of most probable words given a particular clue, clue type, and fill length
+#       NOTE: anagram clue takes forever, this is something michael implemented.. so not sure if we want to take it out
+# 4. integrated results into final draft paper, and wrote about semantic analysis in final draft 

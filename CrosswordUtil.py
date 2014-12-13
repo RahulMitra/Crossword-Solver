@@ -31,12 +31,16 @@ class Crossword:
 		self.fills = [] 		# list of fill objects
 		self.data = {}			# JSON representation of crossword puzzle
 		self.formattedCW = [] 	# 2D matrix representing the crossword puzzle
+		self.answers = []		# a list of answers to the crossword puzzle, used to later verify that it is correct
 
 	def getClues(self):
 		return self.clues
 
 	def getFills(self):
 		return self.fills
+
+	def getAnswers(self):
+		return self.answers
 
 	def populateClues(self):
 		clues = {}
@@ -229,6 +233,23 @@ class Crossword:
 					down_fill.intersections[str(down_fill_intersection_index)] = (across_fill, across_fill_intersection_index)
 					across_fill.intersections[str(across_fill_intersection_index)] = (down_fill, down_fill_intersection_index)
 
+	def setAnswers(self):
+		answersAcross = list(self.data["answers"]["across"])
+		answersDown = list(self.data["answers"]["down"])
+
+		for answer in answersAcross:
+			answer = str(answer.strip())
+			answer = answer.lower()
+			self.answers.append(answer)
+
+		for answer in answersDown:
+			answer = str(answer.strip())
+			answer = answer.lower()
+			self.answers.append(answer)
+
+		print self.answers
+
+
 	def load(self, crossword_file):
 		# Reset all internal variables
 		self.clues = {} 		
@@ -243,6 +264,7 @@ class Crossword:
 		self.generateAcrossFills()
 		self.generateDownFills()
 		self.generateFillIntersections()
+		self.setAnswers()
 
 	def printFills(self):
 		for fill in self.fills:

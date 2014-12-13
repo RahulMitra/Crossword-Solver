@@ -239,16 +239,6 @@ SOLUTION FOUND:
 5 across: aloe
 
 SOLUTION FOUND:
-3 down: anna
-2 down: orig
-4 down: need
-1 across: moan
-1 down: mete
-6 across: tine
-7 across: egad
-5 across: erne
-
-SOLUTION FOUND:
 3 down: modo
 2 down: mood
 4 down: ares
@@ -367,16 +357,6 @@ SOLUTION FOUND:
 6 across: neat
 7 across: yens
 5 across: ogle
-
-SOLUTION FOUND:
-3 down: odin
-2 down: erne
-4 down: nots
-1 across: neon
-1 down: nosy
-6 across: snit
-7 across: yens
-5 across: ordo
 
 SOLUTION FOUND:
 3 down: node
@@ -769,36 +749,6 @@ SOLUTION FOUND:
 5 across: opal
 
 SOLUTION FOUND:
-3 down: name
-2 down: oral
-4 down: oleo
-1 across: mono
-1 down: mono
-6 across: name
-7 across: oleo
-5 across: oral
-
-SOLUTION FOUND:
-3 down: nape
-2 down: oral
-4 down: oleo
-1 across: mono
-1 down: mono
-6 across: nape
-7 across: oleo
-5 across: oral
-
-SOLUTION FOUND:
-3 down: nave
-2 down: oral
-4 down: oleo
-1 across: mono
-1 down: mono
-6 across: nave
-7 across: oleo
-5 across: oral
-
-SOLUTION FOUND:
 3 down: neap
 2 down: noes
 4 down: alps
@@ -829,16 +779,6 @@ SOLUTION FOUND:
 5 across: mood
 
 SOLUTION FOUND:
-3 down: mien
-2 down: erne
-4 down: ogre
-1 across: memo
-1 down: moon
-6 across: oner
-7 across: nene
-5 across: orig
-
-SOLUTION FOUND:
 3 down: neap
 2 down: noel
 4 down: asps
@@ -857,16 +797,6 @@ SOLUTION FOUND:
 6 across: neap
 7 across: alps
 5 across: noes
-
-SOLUTION FOUND:
-3 down: nisi
-2 down: evil
-4 down: olio
-1 across: leno
-1 down: leno
-6 across: nisi
-7 across: olio
-5 across: evil
 
 SOLUTION FOUND:
 3 down: modi
@@ -897,6 +827,16 @@ SOLUTION FOUND:
 6 across: modi
 7 across: olio
 5 across: enol
+
+SOLUTION FOUND:
+3 down: nisi
+2 down: evil
+4 down: olio
+1 across: leno
+1 down: leno
+6 across: nisi
+7 across: olio
+5 across: evil
 
 SOLUTION FOUND:
 3 down: midi
@@ -997,16 +937,6 @@ SOLUTION FOUND:
 6 across: nazi
 7 across: olio
 5 across: opal
-
-SOLUTION FOUND:
-3 down: nazi
-2 down: oral
-4 down: olio
-1 across: mono
-1 down: mono
-6 across: nazi
-7 across: olio
-5 across: oral
 
 SOLUTION FOUND:
 3 down: eave
@@ -1209,36 +1139,6 @@ SOLUTION FOUND:
 5 across: noah
 
 SOLUTION FOUND:
-3 down: nill
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nile
-7 across: ogle
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nill
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nile
-7 across: ogle
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nill
-2 down: orig
-4 down: ogle
-1 across: mono
-1 down: mono
-6 across: nill
-7 across: ogle
-5 across: orig
-
-SOLUTION FOUND:
 3 down: news
 2 down: asea
 4 down: gals
@@ -1319,16 +1219,6 @@ SOLUTION FOUND:
 5 across: omit
 
 SOLUTION FOUND:
-3 down: odes
-2 down: orca
-4 down: nods
-1 across: moon
-1 down: moas
-6 across: aced
-7 across: sass
-5 across: ordo
-
-SOLUTION FOUND:
 3 down: ness
 2 down: asia
 4 down: gats
@@ -1387,16 +1277,6 @@ SOLUTION FOUND:
 6 across: mitt
 7 across: sass
 5 across: asia
-
-SOLUTION FOUND:
-3 down: odes
-2 down: orca
-4 down: nods
-1 across: moon
-1 down: moas
-6 across: aced
-7 across: sass
-5 across: ordo
 
 SOLUTION FOUND:
 3 down: noel
@@ -1559,26 +1439,6 @@ SOLUTION FOUND:
 5 across: opal
 
 SOLUTION FOUND:
-3 down: nail
-2 down: oral
-4 down: olla
-1 across: mono
-1 down: mono
-6 across: nail
-7 across: olla
-5 across: oral
-
-SOLUTION FOUND:
-3 down: natl
-2 down: oral
-4 down: olla
-1 across: mono
-1 down: mono
-6 across: natl
-7 across: olla
-5 across: oral
-
-SOLUTION FOUND:
 3 down: real
 2 down: fuel
 4 down: olla
@@ -1627,56 +1487,6 @@ SOLUTION FOUND:
 6 across: soho
 7 across: aloe
 5 across: enol
-
-SOLUTION FOUND:
-3 down: nice
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nice
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nile
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nile
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nile
-2 down: orig
-4 down: ogle
-1 across: mono
-1 down: mono
-6 across: nill
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nile
-2 down: orig
-4 down: ogle
-1 across: mono
-1 down: mono
-6 across: nill
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nine
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nine
-7 across: ogee
-5 across: orig
 
 SOLUTION FOUND:
 3 down: modi
@@ -2219,112 +2029,12 @@ SOLUTION FOUND:
 5 across: rani
 
 SOLUTION FOUND:
-3 down: arcs
-2 down: okra
-4 down: haha
-1 across: noah
-1 down: noon
-6 across: orch
-7 across: nasa
-5 across: okra
-
-SOLUTION FOUND:
-3 down: arcs
-2 down: otra
-4 down: haha
-1 across: noah
-1 down: noon
-6 across: orch
-7 across: nasa
-5 across: otra
-
-SOLUTION FOUND:
-3 down: neat
-2 down: otra
-4 down: oslo
-1 across: mono
-1 down: muon
-6 across: oral
-7 across: nato
-5 across: utes
-
-SOLUTION FOUND:
 3 down: orca
 2 down: ogre
 4 down: nest
 1 across: moon
 1 down: moan
 6 across: arcs
-7 across: neat
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orca
-2 down: ogre
-4 down: nest
-1 across: moon
-1 down: moan
-6 across: arcs
-7 across: neat
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orca
-2 down: ogre
-4 down: nest
-1 across: moon
-1 down: moon
-6 across: orcs
-7 across: neat
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orca
-2 down: ogre
-4 down: nest
-1 across: moon
-1 down: moon
-6 across: orcs
-7 across: neat
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orca
-2 down: eyre
-4 down: nest
-1 across: neon
-1 down: neon
-6 across: orcs
-7 across: neat
-5 across: eyre
-
-SOLUTION FOUND:
-3 down: orca
-2 down: eyre
-4 down: nest
-1 across: neon
-1 down: neon
-6 across: orcs
-7 across: neat
-5 across: eyre
-
-SOLUTION FOUND:
-3 down: orca
-2 down: ogre
-4 down: nest
-1 across: noon
-1 down: noon
-6 across: orcs
-7 across: neat
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orca
-2 down: ogre
-4 down: nest
-1 across: noon
-1 down: noon
-6 across: orcs
 7 across: neat
 5 across: ogre
 
@@ -2354,76 +2064,6 @@ SOLUTION FOUND:
 4 down: neat
 1 across: moan
 1 down: moon
-6 across: orca
-7 across: nest
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: arcs
-2 down: ogre
-4 down: neat
-1 across: moan
-1 down: moon
-6 across: orca
-7 across: nest
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orcs
-2 down: ogre
-4 down: neat
-1 across: moon
-1 down: moon
-6 across: orca
-7 across: nest
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orcs
-2 down: ogre
-4 down: neat
-1 across: moon
-1 down: moon
-6 across: orca
-7 across: nest
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orcs
-2 down: eyre
-4 down: neat
-1 across: neon
-1 down: neon
-6 across: orca
-7 across: nest
-5 across: eyre
-
-SOLUTION FOUND:
-3 down: orcs
-2 down: eyre
-4 down: neat
-1 across: neon
-1 down: neon
-6 across: orca
-7 across: nest
-5 across: eyre
-
-SOLUTION FOUND:
-3 down: orcs
-2 down: ogre
-4 down: neat
-1 across: noon
-1 down: noon
-6 across: orca
-7 across: nest
-5 across: ogre
-
-SOLUTION FOUND:
-3 down: orcs
-2 down: ogre
-4 down: neat
-1 across: noon
-1 down: noon
 6 across: orca
 7 across: nest
 5 across: ogre
@@ -2477,26 +2117,6 @@ SOLUTION FOUND:
 6 across: edam
 7 across: nims
 5 across: modo
-
-SOLUTION FOUND:
-3 down: aced
-2 down: ordo
-4 down: sass
-1 across: moas
-1 down: moon
-6 across: odes
-7 across: nods
-5 across: orca
-
-SOLUTION FOUND:
-3 down: aced
-2 down: ordo
-4 down: sass
-1 across: moas
-1 down: moon
-6 across: odes
-7 across: nods
-5 across: orca
 
 SOLUTION FOUND:
 3 down: alee
@@ -2579,134 +2199,14 @@ SOLUTION FOUND:
 5 across: enol
 
 SOLUTION FOUND:
-3 down: snit
-2 down: ordo
-4 down: yens
-1 across: nosy
-1 down: neon
-6 across: odin
-7 across: nots
-5 across: erne
-
-SOLUTION FOUND:
-3 down: nick
-2 down: ecru
-4 down: ease
-1 across: nene
-1 down: neon
-6 across: orcs
-7 across: nuke
-5 across: ecia
-
-SOLUTION FOUND:
-3 down: nice
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nice
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nile
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nile
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nile
-2 down: orig
-4 down: ogle
-1 across: mono
-1 down: mono
-6 across: nill
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nile
-2 down: orig
-4 down: ogle
-1 across: mono
-1 down: mono
-6 across: nill
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nine
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nine
-7 across: ogee
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nill
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nile
-7 across: ogle
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nill
-2 down: orig
-4 down: ogee
-1 across: mono
-1 down: mono
-6 across: nile
-7 across: ogle
-5 across: orig
-
-SOLUTION FOUND:
-3 down: nill
-2 down: orig
-4 down: ogle
-1 across: mono
-1 down: mono
-6 across: nill
-7 across: ogle
-5 across: orig
-
-SOLUTION FOUND:
-3 down: oner
-2 down: orig
-4 down: nene
-1 across: moon
-1 down: memo
-6 across: mien
-7 across: ogre
-5 across: erne
-
-SOLUTION FOUND:
-3 down: aced
+3 down: mold
 2 down: enol
-4 down: ness
-1 across: mean
-1 down: mono
-6 across: noes
-7 across: olds
-5 across: once
-
-SOLUTION FOUND:
-3 down: mend
-2 down: enol
-4 down: ores
+4 down: oles
 1 across: memo
-1 down: mono
-6 across: none
+1 down: memo
+6 across: mole
 7 across: olds
-5 across: oner
+5 across: enol
 
 SOLUTION FOUND:
 3 down: mild
@@ -2729,14 +2229,14 @@ SOLUTION FOUND:
 5 across: evil
 
 SOLUTION FOUND:
-3 down: mold
+3 down: aced
 2 down: enol
-4 down: oles
-1 across: memo
-1 down: memo
-6 across: mole
+4 down: ness
+1 across: mean
+1 down: mono
+6 across: noes
 7 across: olds
-5 across: enol
+5 across: once
 
 SOLUTION FOUND:
 3 down: node
@@ -3129,36 +2629,6 @@ SOLUTION FOUND:
 5 across: opal
 
 SOLUTION FOUND:
-3 down: name
-2 down: oral
-4 down: oleo
-1 across: mono
-1 down: mono
-6 across: name
-7 across: oleo
-5 across: oral
-
-SOLUTION FOUND:
-3 down: nape
-2 down: oral
-4 down: oleo
-1 across: mono
-1 down: mono
-6 across: nape
-7 across: oleo
-5 across: oral
-
-SOLUTION FOUND:
-3 down: nave
-2 down: oral
-4 down: oleo
-1 across: mono
-1 down: mono
-6 across: nave
-7 across: oleo
-5 across: oral
-
-SOLUTION FOUND:
 3 down: mole
 2 down: enol
 4 down: olds
@@ -3189,16 +2659,6 @@ SOLUTION FOUND:
 5 across: evil
 
 SOLUTION FOUND:
-3 down: mete
-2 down: enol
-4 down: ores
-1 across: memo
-1 down: mono
-6 across: note
-7 across: oles
-5 across: oner
-
-SOLUTION FOUND:
 3 down: erne
 2 down: nail
 4 down: ryes
@@ -3207,16 +2667,6 @@ SOLUTION FOUND:
 6 across: tine
 7 across: oles
 5 across: nary
-
-SOLUTION FOUND:
-3 down: nisi
-2 down: evil
-4 down: olio
-1 across: leno
-1 down: leno
-6 across: nisi
-7 across: olio
-5 across: evil
 
 SOLUTION FOUND:
 3 down: modi
@@ -3247,6 +2697,16 @@ SOLUTION FOUND:
 6 across: modi
 7 across: olio
 5 across: enol
+
+SOLUTION FOUND:
+3 down: nisi
+2 down: evil
+4 down: olio
+1 across: leno
+1 down: leno
+6 across: nisi
+7 across: olio
+5 across: evil
 
 SOLUTION FOUND:
 3 down: midi
@@ -3347,16 +2807,6 @@ SOLUTION FOUND:
 6 across: nazi
 7 across: olio
 5 across: opal
-
-SOLUTION FOUND:
-3 down: nazi
-2 down: oral
-4 down: olio
-1 across: mono
-1 down: mono
-6 across: nazi
-7 across: olio
-5 across: oral
 
 SOLUTION FOUND:
 3 down: noel
@@ -3519,26 +2969,6 @@ SOLUTION FOUND:
 5 across: opal
 
 SOLUTION FOUND:
-3 down: nail
-2 down: oral
-4 down: olla
-1 across: mono
-1 down: mono
-6 across: nail
-7 across: olla
-5 across: oral
-
-SOLUTION FOUND:
-3 down: natl
-2 down: oral
-4 down: olla
-1 across: mono
-1 down: mono
-6 across: natl
-7 across: olla
-5 across: oral
-
-SOLUTION FOUND:
 3 down: real
 2 down: fuel
 4 down: olla
@@ -3577,6 +3007,36 @@ SOLUTION FOUND:
 6 across: mire
 7 across: once
 5 across: edam
+
+SOLUTION FOUND:
+3 down: nene
+2 down: open
+4 down: orts
+1 across: mono
+1 down: modo
+6 across: dent
+7 across: ones
+5 across: oper
+
+SOLUTION FOUND:
+3 down: nene
+2 down: open
+4 down: orts
+1 across: mono
+1 down: mono
+6 across: nent
+7 across: ones
+5 across: oper
+
+SOLUTION FOUND:
+3 down: none
+2 down: odin
+4 down: ests
+1 across: none
+1 down: nato
+6 across: tint
+7 across: ones
+5 across: ados
 
 SOLUTION FOUND:
 3 down: mire
@@ -3589,24 +3049,14 @@ SOLUTION FOUND:
 5 across: alit
 
 SOLUTION FOUND:
-3 down: none
-2 down: odin
-4 down: ores
-1 across: mono
-1 down: mono
-6 across: nine
-7 across: ones
-5 across: odor
-
-SOLUTION FOUND:
-3 down: none
-2 down: odin
-4 down: ests
-1 across: none
-1 down: nato
-6 across: tint
-7 across: ones
-5 across: ados
+3 down: deny
+2 down: open
+4 down: oryx
+1 across: modo
+1 down: modo
+6 across: deny
+7 across: onyx
+5 across: oper
 
 SOLUTION FOUND:
 3 down: nigh
@@ -3659,184 +3109,24 @@ SOLUTION FOUND:
 5 across: olio
 
 SOLUTION FOUND:
-3 down: tara
-2 down: neap
-4 down: oral
-1 across: onto
-1 down: onto
-6 across: tara
-7 across: opal
-5 across: near
-
-SOLUTION FOUND:
-3 down: tara
-2 down: near
-4 down: opal
-1 across: onto
-1 down: onto
-6 across: tara
-7 across: oral
-5 across: neap
-
-SOLUTION FOUND:
-3 down: need
-2 down: odor
-4 down: oslo
-1 across: mono
-1 down: mono
-6 across: noel
-7 across: ordo
-5 across: odes
-
-SOLUTION FOUND:
-3 down: need
-2 down: odor
-4 down: oslo
-1 across: mono
-1 down: mono
-6 across: noel
-7 across: ordo
-5 across: odes
-
-SOLUTION FOUND:
-3 down: nene
-2 down: oner
-4 down: orts
-1 across: mono
-1 down: modo
-6 across: dent
-7 across: ores
-5 across: oner
-
-SOLUTION FOUND:
-3 down: nene
-2 down: oner
-4 down: orts
-1 across: mono
-1 down: mono
-6 across: nent
-7 across: ores
-5 across: oner
-
-SOLUTION FOUND:
-3 down: none
-2 down: oner
-4 down: olds
-1 across: mono
-1 down: memo
-6 across: mend
-7 across: ores
-5 across: enol
-
-SOLUTION FOUND:
-3 down: note
-2 down: oner
-4 down: oles
-1 across: mono
-1 down: memo
-6 across: mete
-7 across: ores
-5 across: enol
-
-SOLUTION FOUND:
-3 down: nene
-2 down: ewer
-4 down: orts
-1 across: leno
-1 down: leno
-6 across: nent
-7 across: ores
-5 across: ewer
-
-SOLUTION FOUND:
-3 down: nine
-2 down: odor
+3 down: dent
+2 down: oper
 4 down: ones
-1 across: mono
-1 down: mono
-6 across: none
-7 across: ores
-5 across: odin
-
-SOLUTION FOUND:
-3 down: dent
-2 down: oner
-4 down: ests
-1 across: mode
-1 down: modo
-6 across: dent
-7 across: orts
-5 across: ones
-
-SOLUTION FOUND:
-3 down: dept
-2 down: oner
-4 down: ests
-1 across: mode
-1 down: modo
-6 across: dept
-7 across: orts
-5 across: ones
-
-SOLUTION FOUND:
-3 down: dent
-2 down: oner
-4 down: ores
 1 across: modo
 1 down: mono
 6 across: nene
 7 across: orts
-5 across: oner
+5 across: open
 
 SOLUTION FOUND:
-3 down: dent
-2 down: oner
-4 down: ests
-1 across: mode
-1 down: mono
-6 across: nent
-7 across: orts
-5 across: ones
-
-SOLUTION FOUND:
-3 down: enol
-2 down: mens
-4 down: nolo
-1 across: omen
-1 down: oleo
-6 across: enol
-7 across: oslo
-5 across: leno
-
-SOLUTION FOUND:
-3 down: oral
-2 down: utes
-4 down: nato
-1 across: muon
-1 down: mono
-6 across: neat
-7 across: oslo
-5 across: otra
-
-SOLUTION FOUND:
-3 down: noel
-2 down: odes
-4 down: ordo
-1 across: mono
-1 down: mono
-6 across: need
-7 across: oslo
-5 across: odor
-
-SOLUTION FOUND:
-3 down: noel
-2 down: odes
-4 down: ordo
-1 across: mono
-1 down: mono
-6 across: need
-7 across: oslo
-5 across: odor
+3 down: deny
+2 down: oper
+4 down: onyx
+1 across: modo
+1 down: modo
+6 across: deny
+7 across: oryx
+5 across: open
 
 SOLUTION FOUND:
 3 down: enol
@@ -3849,24 +3139,14 @@ SOLUTION FOUND:
 5 across: leno
 
 SOLUTION FOUND:
-3 down: orch
-2 down: okra
-4 down: nasa
-1 across: noon
-1 down: noah
-6 across: arcs
-7 across: haha
-5 across: okra
-
-SOLUTION FOUND:
-3 down: orch
-2 down: otra
-4 down: nasa
-1 across: noon
-1 down: noah
-6 across: arcs
-7 across: haha
-5 across: otra
+3 down: enol
+2 down: mens
+4 down: nolo
+1 across: omen
+1 down: oleo
+6 across: enol
+7 across: oslo
+5 across: leno
 
 SOLUTION FOUND:
 3 down: menu
