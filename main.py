@@ -164,12 +164,12 @@ def chooseBest(allAssignments, answerMap):
     print "Best score = ", bestScore
     return optimalSolution
 
-#Prints error rate stats
-def errorRate(realAnswers, best):
-    inCommon = 0.0
+#Prints accuracy rate stats
+def accuracyRate(realAnswers, best):
+    inCommon = 0
     for entry in best:
-        print entry
-        if entry[2] in realAnswers:
+        print best[entry]
+        if best[entry] in realAnswers:
             inCommon += 1
 
     rate = float(inCommon)/len(realAnswers)
@@ -232,7 +232,7 @@ def main():
     allAssignments = search.solve(csp)
     best = chooseBest(allAssignments, answerMap)
     print best
-    errorRate(realAnswers, best)
+    accuracyRate(realAnswers, best)
 
 
 
@@ -241,11 +241,3 @@ if __name__=='__main__':
     main()
 
 
-# what anna did:
-# 1. line 208, 209 say 'this is wrong, need to get answers from json' so within crossword util
-# 2. note: for some reason even though the list of words is being printed out correctly for 'best answers',  
-#  and the solution matches the set of best answers, it is saying that the accuracy is 0  
-# 3. in semantic analysis, added code to take in 'cryptic-clues-testData.txt' to go through the cryptic types
-# of clues and print out the lists of most probable words given a particular clue, clue type, and fill length
-#       NOTE: anagram clue takes forever, this is something michael implemented.. so not sure if we want to take it out
-# 4. integrated results into final draft paper, and wrote about semantic analysis in final draft 
